@@ -64,6 +64,19 @@ def analyze_image_with_vision(image_path):
     try:
         print(f"Starting analysis for: {image_path}")
         
+        # Check if credentials file exists and is valid
+        creds_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+        if not os.path.exists(creds_path) or 'placeholder' in open(creds_path).read():
+            print("⚠️ Google Cloud credentials not configured - returning mock analysis")
+            return {
+                'artwork_name': 'Mock Artwork Analysis',
+                'artist_name': 'Unknown Artist',
+                'confidence': 0.5,
+                'art_labels': [{'description': 'Mock analysis - add Google Cloud credentials for real analysis', 'confidence': 0.5}],
+                'web_entities': [],
+                'mock_analysis': True
+            }
+        
         # Initialize the Vision API client
         client = vision.ImageAnnotatorClient()
         print("Vision client created successfully")
