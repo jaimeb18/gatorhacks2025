@@ -1,0 +1,11 @@
+﻿The name of the artwork is:
+
+
+Return a description of [ARTWORK] using the following format: The [ARTWORK] was created by [ARTIST(s)] in [COUNTRY], [YEAR]. It is currently located in [LOCATION]. Add an extra sentence discussing the style, themes, historical context, or subject matter, depending on what you believe to be most relevant. Also, provide the Wikipedia link for [ARTWORK]. Do not use asterisks or anything special around the words.
+
+
+Every time [ARTWORK] exists, replace it with the name of the artwork. 
+Every time [ARTIST(s)] exists, replace it with the name(s) of the artist(s).
+Every time [COUNTRY] exists, replace it with the country of creation.
+Every time [YEAR] exists, replace it with the year of creation.
+Every time [LOCATION] exists, replace it with the artwork’s current location. Prefer using the museum/gallery name.

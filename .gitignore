@@ -1,3 +1,9 @@
+# Google Cloud credentials
+backend/service-account-key.json
+*.json
+!package.json
+!package-lock.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
