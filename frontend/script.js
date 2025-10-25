@@ -274,9 +274,12 @@ class FileUploader {
             
             // Enable the analyze button if we have an artwork name
             const analyzeBtn = document.getElementById('analyzeBtn');
+            const suggestionsBtn = document.getElementById('suggestionsBtn');
             if (analysis.artwork_name && analysis.artwork_name !== 'Artwork could not be found') {
                 analyzeBtn.disabled = false;
                 analyzeBtn.onclick = () => this.analyzeWithLLM(analysis.artwork_name);
+                suggestionsBtn.disabled = false;
+                suggestionsBtn.onclick = () => this.getSuggestions(analysis.artwork_name);
             }
             
             // Scroll to results
@@ -337,6 +340,72 @@ class FileUploader {
             // Reset button
             analyzeBtn.disabled = false;
             analyzeBtn.textContent = 'Analyze with AI';
+        }
+    }
+
+    async getSuggestions(artworkName) {
+        const suggestionsBtn = document.getElementById('suggestionsBtn');
+        const suggestionsContent = document.getElementById('suggestionsContent');
+        
+        // Show loading state
+        suggestionsBtn.disabled = true;
+        suggestionsBtn.textContent = 'Finding Similar Artworks...';
+        suggestionsContent.innerHTML = `
+            <div class="suggestions-loading">
+                <div class="loading-spinner"></div>
+                <span>AI is finding similar artworks...</span>
+            </div>
+        `;
+        
+        try {
+            // Call the backend suggestions endpoint
+            const response = await fetch(`/get_suggestions/${encodeURIComponent(artworkName)}`);
+            const data = await response.json();
+            
+            if (data.success && data.suggestions && data.suggestions.length > 0) {
+                // Display the suggestions result
+                const suggestionsHtml = data.suggestions.map((suggestion, index) => `
+                    <div class="suggestion-item">
+                        <div class="suggestion-number">${index + 1}</div>
+                        <div class="suggestion-details">
+                            <h4 class="suggestion-title">${suggestion.Name}</h4>
+                            <p class="suggestion-artist">by ${suggestion.Artist}</p>
+                            <p class="suggestion-year">${suggestion.Year}</p>
+                            <p class="suggestion-location">📍 ${suggestion['Current Location']}</p>
+                            ${suggestion.Wikipedia ? `<a href="${suggestion.Wikipedia}" target="_blank" class="suggestion-link">🔗 Learn More</a>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                suggestionsContent.innerHTML = `
+                    <div class="suggestions-result">
+                        <h4>🎨 6 Similar Artworks</h4>
+                        <div class="suggestions-grid">
+                            ${suggestionsHtml}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Show error or no results
+                suggestionsContent.innerHTML = `
+                    <div class="suggestions-error">
+                        <h4>❌ No Similar Artworks Found</h4>
+                        <p>Unable to find similar artworks for "${artworkName}". This might be because the artwork is not well-known or the AI couldn't identify it properly.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            // Show error
+            suggestionsContent.innerHTML = `
+                <div class="suggestions-error">
+                    <h4>❌ Connection Error</h4>
+                    <p>Failed to connect to suggestions service: ${error.message}</p>
+                </div>
+            `;
+        } finally {
+            // Reset button
+            suggestionsBtn.disabled = false;
+            suggestionsBtn.textContent = 'Get Similar Artworks';
         }
     }
 }

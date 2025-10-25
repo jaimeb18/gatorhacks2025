@@ -471,6 +471,32 @@ def get_artwork_themes(artwork_name):
             'success': False
         }), 500
 
+@app.route('/get_suggestions/<artwork_name>')
+def get_artwork_suggestions(artwork_name):
+    """Get 6 similar artworks for a specific artwork using the Agent"""
+    try:
+        # Initialize agent with the artwork name
+        artwork_agent = Agent("artwork", artwork_name)
+        artwork_agent.add_artwork_to_prompt()
+        
+        # Get suggestions from the agent
+        suggestions = artwork_agent.suggestions()
+        
+        return jsonify({
+            'artwork_name': artwork_name,
+            'suggestions': suggestions,
+            'success': True
+        })
+        
+    except Exception as e:
+        print(f"Error getting suggestions for {artwork_name}: {str(e)}")
+        return jsonify({
+            'artwork_name': artwork_name,
+            'suggestions': [],
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.errorhandler(413)
 def too_large(e):
     return jsonify({'error': 'File too large. Maximum size is 16MB.'}), 413
