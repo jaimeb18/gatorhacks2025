@@ -58,3 +58,7 @@ class Agent:
                      "Current Location": innerList[3], "Wikipedia": innerList[4]
                      })
         return suggestion_list
+
+
+    my_agent = Agent("artwork", "Mona Lisa")
+    print(my_agent.artwork_suggestions())

@@ -305,18 +305,23 @@ def analyze_image_with_vision(image_path):
 
 @app.route('/')
 def index():
-    """Serve the main upload page"""
-    return send_from_directory('../frontend', 'index.html')
+    """Serve the home page"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'index.html')
+
+@app.route('/art')
+def art():
+    """Serve the art recognition page"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'art.html')
 
 @app.route('/styles.css')
 def styles():
     """Serve CSS file"""
-    return send_from_directory('../frontend', 'styles.css')
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'styles.css')
 
 @app.route('/script.js')
 def script():
     """Serve JavaScript file"""
-    return send_from_directory('../frontend', 'script.js')
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'script.js')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():

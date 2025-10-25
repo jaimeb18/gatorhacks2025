@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artwork Recognition - GatorHacks4</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="artwork-container">
+        <!-- Header Section -->
+        <header class="artwork-header">
+            <div class="header-content">
+                <div class="header-nav">
+                    <button class="back-btn" onclick="window.location.href='/'">
+                        ← Back to Home
+                    </button>
+                </div>
+                <h1 class="main-title">🎨 Artwork Recognition</h1>
+                <p class="subtitle">Discover the stories behind masterpieces</p>
+                <div class="decorative-line"></div>
+            </div>
+        </header>
+
+        <!-- Main Upload Section -->
+        <main class="artwork-main">
+            <!-- Unified Upload Section -->
+            <div class="unified-upload-section">
+                <div class="upload-container">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <div class="main-icon">🎨</div>
+                            <h3>Add Your Artwork</h3>
+                            <p class="upload-description">Choose how you'd like to add your artwork</p>
+                            
+                            <div class="upload-options">
+                                <button class="option-btn upload-option" onclick="document.getElementById('fileInput').click()">
+                                    <div class="option-icon">🖼️</div>
+                                    <div class="option-text">
+                                        <div class="option-title">Upload File</div>
+                                        <div class="option-subtitle">Choose from device</div>
+                                    </div>
+                                </button>
+                                
+                                <button class="option-btn camera-option" id="cameraBtn">
+                                    <div class="option-icon">📷</div>
+                                    <div class="option-text">
+                                        <div class="option-title">Take Photo</div>
+                                        <div class="option-subtitle">Use camera</div>
+                                    </div>
+                                </button>
+                            </div>
+                            
+                            <input type="file" id="fileInput" accept="image/*" hidden>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="file-list" id="fileList">
+                    <!-- Selected files will appear here -->
+                </div>
+
+                <div class="upload-controls">
+                    <button class="upload-submit-btn" id="uploadBtn" disabled>
+                        Analyze Artwork
+                    </button>
+                    <button class="clear-btn" id="clearBtn" disabled>
+                        Clear
+                    </button>
+                </div>
+
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Analyzing...</span>
+                </div>
+
+                <div class="upload-status" id="uploadStatus"></div>
+            </div>
+
+            <!-- Artwork Results Section -->
+            <div class="artwork-results" id="artworkResults" style="display: none;">
+                <div class="results-header">
+                    <h2>🎭 Recognition Results</h2>
+                </div>
+                
+                <!-- Uploaded Image Display -->
+                <div class="artwork-image-section" id="artworkImageSection">
+                    <img id="uploadedImage" class="uploaded-image" alt="Uploaded artwork">
+                </div>
+                
+                <!-- Artwork Information -->
+                <div class="artwork-info-section">
+                    <div class="artwork-title-section">
+                        <h3 class="section-label">Artwork Title</h3>
+                        <div class="artwork-name" id="artworkName">-</div>
+                    </div>
+                    
+                    <div class="artwork-details-grid">
+                        <div class="detail-section description-full-width">
+                            <h3 class="section-label">Description</h3>
+                            <div class="detail-content" id="artworkDescription">-</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Suggestions Section -->
+                <div class="suggestions-section">
+                    <div class="suggestions-header">
+                        <h3 class="section-label">🎨 Suggestions</h3>
+                    </div>
+                    <div class="suggestions-content" id="suggestionsContent">
+                        <div class="suggestions-placeholder">
+                            <p>Loading suggestions...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Debug Information -->
+                <div class="debug-info" id="debugInfo">
+                    <!-- Debug info will be displayed here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Camera Modal - Completely Separate -->
+        <div class="camera-modal" id="cameraModal" style="display: none;">
+            <div class="camera-modal-content">
+                <div class="camera-header">
+                    <h3>📷 Camera</h3>
+                    <button class="close-camera-btn" id="closeCameraBtn">&times;</button>
+                </div>
+                <div class="camera-preview">
+                    <video id="cameraVideo" autoplay></video>
+                    <canvas id="cameraCanvas" style="display: none;"></canvas>
+                </div>
+                <div class="camera-controls">
+                    <button class="capture-btn" id="captureBtn">📸 Capture</button>
+                    <button class="retake-btn" id="retakeBtn" style="display: none;">🔄 Retake</button>
+                    <button class="use-photo-btn" id="usePhotoBtn" style="display: none;">✅ Use Photo</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
