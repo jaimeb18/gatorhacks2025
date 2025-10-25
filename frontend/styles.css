@@ -9,11 +9,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%),
-        linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     min-height: 100vh;
     color: #ffffff;
     overflow-x: hidden;
@@ -28,8 +24,8 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.05) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
 }
@@ -43,10 +39,10 @@ body::before {
 
 /* Header Styles */
 .artwork-header {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 40px 20px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -59,7 +55,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%, rgba(255, 119, 198, 0.1) 100%);
+    background: linear-gradient(45deg, rgba(255, 215, 0, 0.03) 0%, transparent 50%, rgba(255, 119, 198, 0.03) 100%);
     pointer-events: none;
 }
 
@@ -72,38 +68,38 @@ body::before {
 
 .main-title {
     font-family: 'Playfair Display', serif;
-    font-size: 4rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 30%, #ff6b9d 70%, #ffd700 100%);
+    font-size: 3.5rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ff6b9d 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 20px;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
 }
 
 .subtitle {
-    font-size: 1.4rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 300;
-    margin-bottom: 25px;
-    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
 }
 
 .decorative-line {
-    width: 120px;
-    height: 4px;
-    background: linear-gradient(90deg, #ffd700, #ff6b9d, #ffd700);
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, #ffd700, #ff6b9d);
     margin: 0 auto;
-    border-radius: 2px;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    border-radius: 1px;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
 }
 
 /* Main Content */
 .artwork-main {
     flex: 1;
-    padding: 50px 20px;
-    max-width: 1400px;
+    padding: 30px 20px;
+    max-width: 1200px;
     margin: 0 auto;
     width: 100%;
 }
@@ -160,18 +156,18 @@ body::before {
 }
 
 .upload-container {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(25px);
-    border-radius: 32px;
-    padding: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.4s ease;
+        0 10px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -182,9 +178,9 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 107, 157, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 107, 157, 0.02) 100%);
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.3s ease;
     pointer-events: none;
 }
 
@@ -193,10 +189,10 @@ body::before {
 }
 
 .upload-container:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
     box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 15px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Unified Upload Area */
@@ -831,15 +827,15 @@ body::before {
 
 /* Artwork Results */
 .artwork-results {
-    margin-top: 50px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(25px);
-    border-radius: 32px;
-    padding: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 15px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     position: relative;
     overflow: hidden;
 }
@@ -851,24 +847,24 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 107, 157, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.02) 0%, rgba(255, 107, 157, 0.02) 100%);
     pointer-events: none;
 }
 
 .results-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     position: relative;
     z-index: 1;
 }
 
 .results-header h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     color: #ffd700;
-    margin-bottom: 15px;
-    font-weight: 600;
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
 }
 
 /* Uploaded Image Display */
@@ -898,57 +894,86 @@ body::before {
 
 /* Artwork Information Section */
 .artwork-info-section {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 40px;
-    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
     position: relative;
     z-index: 1;
 }
 
 .artwork-title-section {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .section-label {
     font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: #ffd700;
-    margin-bottom: 15px;
-    font-weight: 600;
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-shadow: 0 0 3px rgba(255, 215, 0, 0.1);
 }
 
 .artwork-name {
     font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
-    font-weight: 700;
+    font-size: 2rem;
+    font-weight: 600;
     color: #ffffff;
-    line-height: 1.3;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+    line-height: 1.2;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.05);
 }
 
 .artwork-details-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 30px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.description-full-width {
+    grid-column: 1 / -1;
+}
+
+.description-full-width .detail-content {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.description-full-width .detail-content a {
+    color: #ffd700;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.description-full-width .detail-content a:hover {
+    color: #ffffff;
+    background: rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 215, 0, 0.5);
+    text-decoration: underline;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
 }
 
 .detail-section {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 15px;
-    padding: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
 }
 
 .detail-section:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateY(-1px);
 }
 
 .detail-content {
@@ -1217,13 +1242,13 @@ body::before {
 
 /* Suggestions Section Styles */
 .suggestions-section {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 30px 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .suggestions-header {

@@ -232,9 +232,13 @@ class FileUploader {
             
             // Display artwork information
             artworkName.textContent = analysis.artwork_name || '-';
-            artistName.textContent = analysis.artist_name || '-';
-            artworkDescription.textContent = '-'; // Leave blank for now
-            artworkSuggestions.textContent = '-'; // Leave blank for now
+            artworkDescription.textContent = 'Loading AI analysis...';
+            
+            // Automatically load AI analysis into description
+            this.loadAIAnalysisIntoDescription(analysis.artwork_name);
+            
+            // Automatically load suggestions
+            this.loadSuggestions(analysis.artwork_name);
             
             // Create debug information
             debugInfo.innerHTML = `
@@ -271,16 +275,6 @@ class FileUploader {
 
             // Show results container
             resultsContainer.style.display = 'block';
-            
-            // Enable the analyze button if we have an artwork name
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            const suggestionsBtn = document.getElementById('suggestionsBtn');
-            if (analysis.artwork_name && analysis.artwork_name !== 'Artwork could not be found') {
-                analyzeBtn.disabled = false;
-                analyzeBtn.onclick = () => this.analyzeWithLLM(analysis.artwork_name);
-                suggestionsBtn.disabled = false;
-                suggestionsBtn.onclick = () => this.getSuggestions(analysis.artwork_name);
-            }
             
             // Scroll to results
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -406,6 +400,110 @@ class FileUploader {
             // Reset button
             suggestionsBtn.disabled = false;
             suggestionsBtn.textContent = 'Get Similar Artworks';
+        }
+    }
+
+    async loadAIAnalysisIntoDescription(artworkName) {
+        const artworkDescription = document.getElementById('artworkDescription');
+        
+        if (!artworkName || artworkName === 'Artwork could not be found') {
+            artworkDescription.textContent = 'Unable to analyze this artwork';
+            return;
+        }
+        
+        try {
+            // Call the backend LLM analysis endpoint
+            const response = await fetch(`/get_themes/${encodeURIComponent(artworkName)}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                // Process the text to make Wikipedia links clickable
+                let processedText = data.themes;
+                
+                // Find Wikipedia URLs and make them clickable
+                const wikipediaRegex = /(https?:\/\/[^\s]+)/g;
+                processedText = processedText.replace(wikipediaRegex, (url) => {
+                    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+                });
+                
+                // Display the analysis result in description
+                artworkDescription.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.5;">${processedText}</div>`;
+            } else {
+                // Show error
+                artworkDescription.textContent = `Analysis failed: ${data.themes}`;
+            }
+        } catch (error) {
+            // Show error
+            artworkDescription.textContent = `Connection error: ${error.message}`;
+        }
+    }
+
+    async loadSuggestions(artworkName) {
+        const suggestionsContent = document.getElementById('suggestionsContent');
+        
+        if (!artworkName || artworkName === 'Artwork could not be found') {
+            suggestionsContent.innerHTML = `
+                <div class="suggestions-error">
+                    <h4>❌ No Suggestions Available</h4>
+                    <p>Unable to find suggestions for this artwork.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Show loading state
+        suggestionsContent.innerHTML = `
+            <div class="suggestions-loading">
+                <div class="loading-spinner"></div>
+                <span>AI is finding similar artworks...</span>
+            </div>
+        `;
+        
+        try {
+            // Call the backend suggestions endpoint
+            const response = await fetch(`/get_suggestions/${encodeURIComponent(artworkName)}`);
+            const data = await response.json();
+            
+            if (data.success && data.suggestions && data.suggestions.length > 0) {
+                // Display the suggestions result
+                const suggestionsHtml = data.suggestions.map((suggestion, index) => `
+                    <div class="suggestion-item">
+                        <div class="suggestion-number">${index + 1}</div>
+                        <div class="suggestion-details">
+                            <h4 class="suggestion-title">${suggestion.Name}</h4>
+                            <p class="suggestion-artist">by ${suggestion.Artist}</p>
+                            <p class="suggestion-year">${suggestion.Year}</p>
+                            <p class="suggestion-location">📍 ${suggestion['Current Location']}</p>
+                            ${suggestion.Wikipedia ? `<a href="${suggestion.Wikipedia}" target="_blank" class="suggestion-link">🔗 Learn More</a>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                suggestionsContent.innerHTML = `
+                    <div class="suggestions-result">
+                        <h4>🎨 6 Similar Artworks</h4>
+                        <div class="suggestions-grid">
+                            ${suggestionsHtml}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Show error or no results
+                suggestionsContent.innerHTML = `
+                    <div class="suggestions-error">
+                        <h4>❌ No Similar Artworks Found</h4>
+                        <p>Unable to find similar artworks for "${artworkName}". This might be because the artwork is not well-known or the AI couldn't identify it properly.</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            // Show error
+            suggestionsContent.innerHTML = `
+                <div class="suggestions-error">
+                    <h4>❌ Connection Error</h4>
+                    <p>Failed to connect to suggestions service: ${error.message}</p>
+                </div>
+            `;
         }
     }
 }
