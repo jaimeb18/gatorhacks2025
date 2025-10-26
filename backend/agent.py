@@ -87,17 +87,27 @@ class Agent:
         for innerList in gemini_list:
             if type(innerList) is list:
                 append_this = {"Restaurant Name": innerList[0], "Cuisine": innerList[1], "Average Costs": innerList[2],
-                     "Yelp Starts": innerList[3]}
+                     "Yelp Stars": innerList[3]}
 
+                # Get Google Maps info
                 url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
                 params = {
                     "input": f"{append_this["Restaurant Name"]} in {location}",
                     "inputtype": "textquery",
-                    "fields": "place_id,name,formatted_address",
+                    "fields": "place_id,name,formatted_address,rating",
                     "key": Agent.google_places_api_key
                 }
                 response = requests.get(url, params=params).json()
-                usable_link = f"https://www.google.com/maps/place/?q=place_id:{response["candidates"][0]["place_id"]}"
-                append_this["Address"] = usable_link
+                
+                if response.get("candidates") and len(response["candidates"]) > 0:
+                    place_info = response["candidates"][0]
+                    place_id = place_info["place_id"]
+                    usable_link = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
+                    append_this["Address"] = usable_link
+                    # Get actual Google rating if Yelp stars are Unknown
+                    if innerList[3] == "Unknown" and "rating" in place_info:
+                        append_this["Yelp Stars"] = f"{place_info['rating']} (Google)"
+                    else:
+                        append_this["Yelp Stars"] = innerList[3]
                 suggestion_list.append(append_this)
         return suggestion_list

@@ -211,11 +211,11 @@ def analyze_image_with_vision(image_path):
             artist_name = artist_candidates[0]['name']
             print(f"Selected artist: {artist_name}")
         
-        # If no specific artwork title found, show "Artwork could not be found"
+        # If no specific artwork title found, tell user we couldn't identify it
         if not artwork_name:
-            artwork_name = "Artwork could not be found"
+            artwork_name = "Unable to identify artwork"
             confidence = 0
-            print("No specific artwork title found - showing 'Artwork could not be found'")
+            print("No specific artwork title found - showing 'Unable to identify artwork'")
         
         # Extract artist name from artwork name (common patterns)
         if artwork_name and not artist_name:
@@ -303,6 +303,83 @@ def analyze_image_with_vision(image_path):
             'web_entities': []
         }
 
+def analyze_food_with_vision(image_path):
+    """Analyze food image using Google Vision API"""
+    try:
+        print(f"Starting food analysis for: {image_path}")
+        
+        # Check credentials
+        creds_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+        if not os.path.exists(creds_path) or 'placeholder' in open(creds_path).read():
+            return {
+                'food_name': 'Mock Food Analysis',
+                'food_type': 'Unknown Food',
+                'confidence': 0.5,
+                'food_labels': [],
+                'web_entities': [],
+                'mock_analysis': True
+            }
+        
+        # Initialize Vision API
+        client = vision.ImageAnnotatorClient()
+        
+        # Read image
+        with io.open(image_path, 'rb') as image_file:
+            content = image_file.read()
+        
+        image = vision.Image(content=content)
+        
+        # Get labels
+        response = client.label_detection(image=image)
+        labels = response.label_annotations
+        
+        # Get web detection
+        web_response = client.web_detection(image=image)
+        web_entities = web_response.web_detection.web_entities if web_response.web_detection else []
+        
+        # Simple: pick highest confidence from labels (skip generic terms)
+        generic_terms = ['food', 'meal', 'dish', 'ingredient', 'pasta', 'noodle', 'noodles', 
+                        'rice', 'bread', 'meat', 'vegetable', 'soup', 'salad', 'spice', 
+                        'spices', 'herb', 'herbs', 'sauce', 'condiment', 'side dish',
+                        'main dish', 'appetizer', 'dessert', 'cuisine', 'cooking',
+                        'prepared food', 'processed food']
+        best_label = None
+        best_score = 0
+        
+        for label in labels:
+            if label.description.lower() not in generic_terms:
+                if label.score > best_score:
+                    best_label = label
+                    best_score = label.score
+        
+        # If no good label found, tell user we couldn't identify it
+        if not best_label or best_score < 0.30:
+            food_name = "Unable to identify food item"
+            best_score = 0.0
+        else:
+            food_name = best_label.description
+        
+        result = {
+            'food_name': food_name,
+            'food_type': 'General',
+            'confidence': best_score,
+            'food_labels': [{'description': label.description, 'confidence': label.score} for label in labels[:10]],
+            'web_entities': [{'description': e.description, 'score': e.score} for e in web_entities[:5]]
+        }
+        
+        return result
+        
+    except Exception as e:
+        print(f"Error in analyze_food_with_vision: {str(e)}")
+        return {
+            'food_name': 'Analysis Failed',
+            'food_type': 'Unknown',
+            'confidence': 0,
+            'error': str(e),
+            'food_labels': [],
+            'web_entities': []
+        }
+
 @app.route('/')
 def index():
     """Serve the home page"""
@@ -313,6 +390,11 @@ def art():
     """Serve the art recognition page"""
     return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'art.html')
 
+@app.route('/food')
+def food():
+    """Serve the food recognition page"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'food.html')
+
 @app.route('/styles.css')
 def styles():
     """Serve CSS file"""
@@ -322,6 +404,11 @@ def styles():
 def script():
     """Serve JavaScript file"""
     return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'script.js')
+
+@app.route('/food.js')
+def food_script():
+    """Serve food JavaScript file"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'food.js')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
@@ -485,7 +572,7 @@ def get_artwork_suggestions(artwork_name):
         artwork_agent.add_artwork_to_prompt()
         
         # Get suggestions from the agent
-        suggestions = artwork_agent.suggestions()
+        suggestions = artwork_agent.artwork_suggestions()
         
         return jsonify({
             'artwork_name': artwork_name,
@@ -497,6 +584,123 @@ def get_artwork_suggestions(artwork_name):
         print(f"Error getting suggestions for {artwork_name}: {str(e)}")
         return jsonify({
             'artwork_name': artwork_name,
+            'suggestions': [],
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/upload_food', methods=['POST'])
+def upload_food():
+    """Handle food image uploads and analysis"""
+    try:
+        if 'files' not in request.files:
+            return jsonify({'error': 'No files provided'}), 400
+        
+        files = request.files.getlist('files')
+        
+        if not files or all(file.filename == '' for file in files):
+            return jsonify({'error': 'No files selected'}), 400
+        
+        uploaded_files = []
+        failed_uploads = []
+        
+        for file in files:
+            if file and allowed_file(file.filename):
+                # Generate unique filename to prevent conflicts
+                original_filename = secure_filename(file.filename)
+                file_extension = original_filename.rsplit('.', 1)[1].lower()
+                unique_filename = f"{uuid.uuid4()}.{file_extension}"
+                
+                # Save file
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+                file.save(file_path)
+                
+                # Store file info
+                file_info = {
+                    'original_name': original_filename,
+                    'saved_name': unique_filename,
+                    'size': os.path.getsize(file_path),
+                    'upload_time': datetime.now().isoformat()
+                }
+                
+                # Analyze image for food if it's an image file
+                print(f"File extension: {file_extension}")
+                if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
+                    print(f"✅ Image file detected! Analyzing for food: {original_filename}")
+                    print(f"File path: {file_path}")
+                    try:
+                        analysis_result = analyze_food_with_vision(file_path)
+                        print(f"Analysis result: {analysis_result}")
+                        file_info['food_analysis'] = analysis_result
+                        
+                        # Keep the image for display
+                        print(f"📸 Keeping image for display: {file_path}")
+                    except Exception as e:
+                        print(f"❌ Error analyzing food image: {e}")
+                        import traceback
+                        traceback.print_exc()
+                        file_info['food_analysis'] = {
+                            'food_name': 'Analysis Error',
+                            'confidence': 0,
+                            'error': str(e)
+                        }
+                        print(f"📸 Keeping image despite analysis error: {file_path}")
+                else:
+                    print(f"❌ Not an image file: {file_extension}")
+                    # Delete non-image files immediately
+                    try:
+                        os.remove(file_path)
+                        print(f"🗑️ Deleted non-image file: {file_path}")
+                    except Exception as delete_error:
+                        print(f"⚠️ Could not delete file: {delete_error}")
+                
+                uploaded_files.append(file_info)
+            else:
+                failed_uploads.append(file.filename if file else 'Unknown file')
+        
+        response_data = {
+            'message': 'Upload completed',
+            'uploadedCount': len(uploaded_files),
+            'uploadedFiles': uploaded_files
+        }
+        
+        if failed_uploads:
+            response_data['failedFiles'] = failed_uploads
+            response_data['message'] += f' ({len(failed_uploads)} files failed)'
+        
+        # Clean up old images to maintain max of 5 images
+        cleanup_old_images(max_images=5)
+        
+        return jsonify(response_data)
+        
+    except Exception as e:
+        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+
+@app.route('/get_food_suggestions/<food_name>')
+def get_food_suggestions(food_name):
+    """Get restaurant suggestions for a specific food using the Agent"""
+    try:
+        # Get location from request (optional)
+        location = request.args.get('location', 'New York')
+        
+        # Initialize agent with the food name
+        food_agent = Agent("food", food_name)
+        food_agent.add_food_to_prompt(location)
+        
+        # Get suggestions from the agent
+        suggestions = food_agent.food_suggestions(location)
+        
+        return jsonify({
+            'food_name': food_name,
+            'suggestions': suggestions,
+            'location': location,
+            'success': True
+        })
+        
+    except Exception as e:
+        print(f"Error getting suggestions for {food_name}: {str(e)}")
+        return jsonify({
+            'food_name': food_name,
             'suggestions': [],
             'success': False,
             'error': str(e)
