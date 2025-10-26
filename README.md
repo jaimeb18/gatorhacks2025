@@ -1,4 +1,4 @@
-# TravelBuddy AI - AI Image Recognition Hub
+# TravelBuddy AI
 
 An intelligent web application that uses AI to recognize and analyze artwork, food, and architecture from uploaded images, providing detailed information, historical context, and personalized recommendations.
 
