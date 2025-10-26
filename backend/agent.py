@@ -101,7 +101,10 @@ class Agent:
                      })
         return suggestion_list
 
-    def food_suggestions(self, location):
+    def food_suggestions(self, location, themes):
+        lines = self.__get_suggestions_prompt.splitlines()
+        lines[-1] += themes
+        self.__get_suggestions_prompt = "\n".join(lines)
         response = self.__model.generate_content(self.__get_suggestions_prompt)
         gemini_list = eval(re.sub(r'```python\n?|```\n?', '', response.text.strip()))
         suggestion_list = []
