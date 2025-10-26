@@ -58,7 +58,6 @@ gatorhacks4/
 - **Google Cloud Vision API** - Image recognition and analysis
 - **Google Gemini AI (gemini-2.5-flash)** - LLM for descriptions and suggestions
 - **Google Places API** - Restaurant and location data
-- **Werkzeug** - WSGI utilities
 
 ### Frontend
 - **HTML5** - Structure
