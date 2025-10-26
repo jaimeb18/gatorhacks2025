@@ -1,54 +1,75 @@
 from pathlib import Path
 import google.generativeai as genai
 import re
+import requests
 
 class Agent:
     # API Key, remove later
     google_api_key = "AIzaSyAdCvnxTFuXUCBLK3KX6rtzlyto1qaBA_U"
+    google_places_api_key = "AIzaSyDnRsci0FAeVRAMgyhYpUiT6_LenEfM_QE"
 
     # Gemini Model
     model_name = "gemini-2.5-flash"
     def __init__(self, media_type, name: str = ""):
+        current_file = Path(__file__)
+        current_directory = current_file.parent
+        prompts = current_directory / "Prompts"
         if media_type == "artwork":
             self.__artwork = name
 
             #Gathering files
-            current_file = Path(__file__)
-            current_directory = current_file.parent
-            prompts = current_directory / "Prompts"
-            self.__artworks_extracting_themes_prompt = (prompts / "Artworks_Extracting_Themes_Prompt.txt").read_text(
+            self.__extracting_themes_prompt = (prompts / "Artworks_Extracting_Themes_Prompt.txt").read_text(
                 encoding="utf-8")
-            self.__artworks_get_suggestions_prompt = (prompts/ "Artworks_Get_Suggestions_Prompt.txt").read_text(
+            self.__get_suggestions_prompt = (prompts/ "Artworks_Get_Suggestions_Prompt.txt").read_text(
                 encoding="utf-8")
-            self.__artworks_get_details_prompt = (prompts/"Artworks_Get_Details_Prompt.txt").read_text(
+            self.__get_details_prompt = (prompts/"Artworks_Get_Details_Prompt.txt").read_text(
                 encoding="utf-8")
+        elif media_type == "food":
+            self.__dish_name = name
 
+            #Gathering files
+            self.__extracting_themes_prompt = (prompts / "Food_Extracting_Themes_Prompt.txt").read_text(
+                encoding="utf-8")
+            self.__get_details_prompt = (prompts / "Food_Get_Details_Prompt.txt").read_text(encoding="utf-8")
+            self.__get_suggestions_prompt = (prompts / "Food_Get_Suggestions_Prompt.txt").read_text(encoding="utf-8")
 
         # Configure the API key
         genai.configure(api_key=Agent.google_api_key)
         self.__model = genai.GenerativeModel(Agent.model_name)
 
     def add_artwork_to_prompt(self):
-        lines = self.__artworks_extracting_themes_prompt.splitlines()
+        lines = self.__extracting_themes_prompt.splitlines()
         lines[1] += f" {self.__artwork}"
-        self.__artworks_extracting_themes_prompt = "\n".join(lines)
-        lines = self.__artworks_get_details_prompt.splitlines()
+        self.__extracting_themes_prompt = "\n".join(lines)
+        lines = self.__get_details_prompt.splitlines()
         lines[0] += f" {self.__artwork}"
-        self.__artworks_get_details_prompt = "\n".join(lines)
-        lines = self.__artworks_get_suggestions_prompt.splitlines()
+        self.__get_details_prompt = "\n".join(lines)
+        lines = self.__get_suggestions_prompt.splitlines()
         lines[0] = lines[0].replace("{artwork}", self.__artwork)
-        self.__artworks_get_suggestions_prompt = "\n".join(lines)
+        self.__get_suggestions_prompt = "\n".join(lines)
+
+    def add_food_to_prompt(self, location):
+        lines = self.__extracting_themes_prompt.splitlines()
+        lines[1] += f" {self.__dish_name}"
+        self.__extracting_themes_prompt = "\n".join(lines)
+        lines = self.__get_details_prompt.splitlines()
+        lines[0] += f" {self.__dish_name}"
+        self.__get_details_prompt = "\n".join(lines)
+        lines = self.__get_suggestions_prompt.splitlines()
+        lines[1] = lines[1].replace("{food}", self.__dish_name)
+        lines[0] += f" {location}"
+        self.__get_suggestions_prompt = "\n".join(lines)
 
     def get_themes(self):
-        response = self.__model.generate_content(self.__artworks_extracting_themes_prompt)
+        response = self.__model.generate_content(self.__extracting_themes_prompt)
         return response.text
 
     def get_details(self):
-        response = self.__model.generate_content(self.__artworks_get_details_prompt)
+        response = self.__model.generate_content(self.__get_details_prompt)
         return response.text
 
-    def suggestions(self):
-        response = self.__model.generate_content(self.__artworks_get_suggestions_prompt)
+    def artwork_suggestions(self):
+        response = self.__model.generate_content(self.__get_suggestions_prompt)
         gemini_list = eval(re.sub(r'```python\n?|```\n?', '', response.text.strip()))
         suggestion_list = []
         for innerList in gemini_list:
@@ -57,4 +78,26 @@ class Agent:
                     {"Name": innerList[0], "Artist": innerList[1], "Year": innerList[2],
                      "Current Location": innerList[3], "Wikipedia": innerList[4]
                      })
+        return suggestion_list
+
+    def food_suggestions(self, location):
+        response = self.__model.generate_content(self.__get_suggestions_prompt)
+        gemini_list = eval(re.sub(r'```python\n?|```\n?', '', response.text.strip()))
+        suggestion_list = []
+        for innerList in gemini_list:
+            if type(innerList) is list:
+                append_this = {"Restaurant Name": innerList[0], "Cuisine": innerList[1], "Average Costs": innerList[2],
+                     "Yelp Starts": innerList[3]}
+
+                url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
+                params = {
+                    "input": f"{append_this["Restaurant Name"]} in {location}",
+                    "inputtype": "textquery",
+                    "fields": "place_id,name,formatted_address",
+                    "key": Agent.google_places_api_key
+                }
+                response = requests.get(url, params=params).json()
+                usable_link = f"https://www.google.com/maps/place/?q=place_id:{response["candidates"][0]["place_id"]}"
+                append_this["Address"] = usable_link
+                suggestion_list.append(append_this)
         return suggestion_list

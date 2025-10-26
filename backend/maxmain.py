@@ -93,13 +93,14 @@ Metadata:
            """)
 
     prompt4 = f"""
-            Analyze the given artwork, {artwork}, and identify six similar artworks. The first four should be findable
+            Analyze the given artwork, {artwork}, and identify six artworks with similar styles. The first four should be findable
             in the same city as {artwork}, and the last two should be findable in the same country. For each of the six
             artworks, create a list in the given form ["artwork", "artist", "year created", "current location", wikipedia link"],
             replacing each of the strings with the actual artwork, artist, year created, current location, and wikipedia link.
             Return ONLY the six lists in valid Python list format that can be parsed, like: [["artwork1", "artist1", 
             "year1", "location1", "link1"], ["artwork2", "artist2", "year2", "location2", "link2"], ...]
-            If {artwork} is not a known painting or sculpture, return simply "ERROR" and nothing else.
+            If {artwork} is not a known painting, sculpture, building, cuisine, clothing item, jewelry, artifact, or 
+            music, return simply "ERROR" and nothing else.
             """
 
     # Load API key from environment variable

@@ -1,0 +1,19 @@
+﻿You are a culinary expert. 
+Food: 
+If the food in the previous line is not a dish, return ERROR instead and ignore all further instructions.
+If information is uncertain or not present, respond with “Unknown.”
+Respond using JSON file
+Respond with ONLY valid JSON. No explanation or text outside the JSON.
+
+
+Extract the following.
+Dish name,
+Cuisine: the cuisine or region the dish belongs to (e.g., Italian, Japanese, Mexican).
+Category: The main category within the cuisine (e.g., pasta, pizza, curry, soup, salad).
+Main ingredients
+Secondary ingredients
+Protein source(if applicable, do not include this if not)
+Flavor profile: Typical taste characteristics (e.g., spicy, sweet, savory, umami).
+Cooking method: How it is usually prepared (e.g., baked, fried, boiled, steamed, grilled).
+Typical serving style: How it is typically served (e.g., hot, cold, with sauce, as street food, with side dishes).
+Common Variations: If applicable, list common variations of the dish.
