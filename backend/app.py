@@ -24,7 +24,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-def cleanup_old_images(max_images=5):
+def cleanup_old_images(max_images=20):
     """Keep only the most recent images, delete the oldest ones"""
     try:
         # Get all image files in upload directory
@@ -395,10 +395,20 @@ def food():
     """Serve the food recognition page"""
     return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'food.html')
 
+@app.route('/architecture')
+def architecture():
+    """Serve the architecture recognition page"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'architecture.html')
+
 @app.route('/styles.css')
 def styles():
     """Serve CSS file"""
     return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'styles.css')
+
+@app.route('/logo/<filename>')
+def serve_logo(filename):
+    """Serve logo files"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'logo'), filename)
 
 @app.route('/script.js')
 def script():
@@ -409,6 +419,11 @@ def script():
 def food_script():
     """Serve food JavaScript file"""
     return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'food.js')
+
+@app.route('/architecture.js')
+def architecture_script():
+    """Serve architecture JavaScript file"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'architecture.js')
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
@@ -494,8 +509,8 @@ def upload_files():
             response_data['failedFiles'] = failed_uploads
             response_data['message'] += f' ({len(failed_uploads)} files failed)'
         
-        # Clean up old images to maintain max of 5 images
-        cleanup_old_images(max_images=5)
+        # Clean up old images to maintain max of 20 images
+        cleanup_old_images(max_images=20)
         
         return jsonify(response_data)
         
@@ -668,13 +683,38 @@ def upload_food():
             response_data['failedFiles'] = failed_uploads
             response_data['message'] += f' ({len(failed_uploads)} files failed)'
         
-        # Clean up old images to maintain max of 5 images
-        cleanup_old_images(max_images=5)
+        # Clean up old images to maintain max of 20 images
+        cleanup_old_images(max_images=20)
         
         return jsonify(response_data)
         
     except Exception as e:
         return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+
+@app.route('/get_food_details/<food_name>')
+def get_food_details(food_name):
+    """Get detailed description for a specific food using the Agent"""
+    try:
+        # Initialize agent with the food name
+        food_agent = Agent("food", food_name)
+        food_agent.add_food_to_prompt("")
+        
+        # Get details from the agent
+        details = food_agent.get_details()
+        
+        return jsonify({
+            'food_name': food_name,
+            'details': details,
+            'success': True
+        })
+        
+    except Exception as e:
+        print(f"Error getting details for {food_name}: {str(e)}")
+        return jsonify({
+            'food_name': food_name,
+            'details': f"Error analyzing food: {str(e)}",
+            'success': False
+        }), 500
 
 @app.route('/get_food_suggestions/<food_name>')
 def get_food_suggestions(food_name):
@@ -701,6 +741,145 @@ def get_food_suggestions(food_name):
         print(f"Error getting suggestions for {food_name}: {str(e)}")
         return jsonify({
             'food_name': food_name,
+            'suggestions': [],
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/upload_architecture', methods=['POST'])
+def upload_architecture():
+    """Handle architecture image uploads and analysis"""
+    try:
+        if 'files' not in request.files:
+            return jsonify({'error': 'No files provided'}), 400
+        
+        files = request.files.getlist('files')
+        
+        if not files or all(file.filename == '' for file in files):
+            return jsonify({'error': 'No files selected'}), 400
+        
+        uploaded_files = []
+        failed_uploads = []
+        
+        for file in files:
+            if file and allowed_file(file.filename):
+                # Generate unique filename to prevent conflicts
+                original_filename = secure_filename(file.filename)
+                file_extension = original_filename.rsplit('.', 1)[1].lower()
+                unique_filename = f"{uuid.uuid4()}.{file_extension}"
+                
+                # Save file
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+                file.save(file_path)
+                
+                # Store file info
+                file_info = {
+                    'original_name': original_filename,
+                    'saved_name': unique_filename,
+                    'size': os.path.getsize(file_path),
+                    'upload_time': datetime.now().isoformat()
+                }
+                
+                # Analyze image for architecture if it's an image file
+                print(f"File extension: {file_extension}")
+                if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
+                    print(f"✅ Image file detected! Analyzing for architecture: {original_filename}")
+                    print(f"File path: {file_path}")
+                    try:
+                        analysis_result = analyze_image_with_vision(file_path)
+                        print(f"Analysis result: {analysis_result}")
+                        # Store as architecture_analysis for consistency with frontend
+                        file_info['architecture_analysis'] = analysis_result
+                        
+                        # Keep the image for display
+                        print(f"📸 Keeping image for display: {file_path}")
+                    except Exception as e:
+                        print(f"❌ Error analyzing architecture image: {e}")
+                        import traceback
+                        traceback.print_exc()
+                        file_info['architecture_analysis'] = {
+                            'artwork_name': 'Analysis Error',
+                            'confidence': 0,
+                            'error': str(e)
+                        }
+                        print(f"📸 Keeping image despite analysis error: {file_path}")
+                else:
+                    print(f"❌ Not an image file: {file_extension}")
+                    # Delete non-image files immediately
+                    try:
+                        os.remove(file_path)
+                        print(f"🗑️ Deleted non-image file: {file_path}")
+                    except Exception as delete_error:
+                        print(f"⚠️ Could not delete file: {delete_error}")
+                
+                uploaded_files.append(file_info)
+            else:
+                failed_uploads.append(file.filename if file else 'Unknown file')
+        
+        response_data = {
+            'message': 'Upload completed',
+            'uploadedCount': len(uploaded_files),
+            'uploadedFiles': uploaded_files
+        }
+        
+        if failed_uploads:
+            response_data['failedFiles'] = failed_uploads
+            response_data['message'] += f' ({len(failed_uploads)} files failed)'
+        
+        # Clean up old images to maintain max of 20 images
+        cleanup_old_images(max_images=20)
+        
+        return jsonify(response_data)
+        
+    except Exception as e:
+        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+
+@app.route('/get_architecture_details/<building_name>')
+def get_architecture_details(building_name):
+    """Get detailed description for a specific building using the Agent"""
+    try:
+        # Initialize agent with the building name
+        architecture_agent = Agent("architecture", building_name)
+        architecture_agent.add_architecture_to_prompt()
+        
+        # Get details from the agent
+        details = architecture_agent.get_details()
+        
+        return jsonify({
+            'building_name': building_name,
+            'details': details,
+            'success': True
+        })
+        
+    except Exception as e:
+        print(f"Error getting details for {building_name}: {str(e)}")
+        return jsonify({
+            'building_name': building_name,
+            'details': f"Error analyzing architecture: {str(e)}",
+            'success': False
+        }), 500
+
+@app.route('/get_architecture_suggestions/<building_name>')
+def get_architecture_suggestions(building_name):
+    """Get similar architecture suggestions for a specific building using the Agent"""
+    try:
+        # Initialize agent with the building name
+        architecture_agent = Agent("architecture", building_name)
+        architecture_agent.add_architecture_to_prompt()
+        
+        # Get suggestions from the agent
+        suggestions = architecture_agent.architecture_suggestions()
+        
+        return jsonify({
+            'building_name': building_name,
+            'suggestions': suggestions,
+            'success': True
+        })
+        
+    except Exception as e:
+        print(f"Error getting suggestions for {building_name}: {str(e)}")
+        return jsonify({
+            'building_name': building_name,
             'suggestions': [],
             'success': False,
             'error': str(e)

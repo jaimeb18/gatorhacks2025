@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artwork Recognition - GatorHacks4</title>
+    <title>Architecture Recognition - GatorHacks4</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -60,8 +60,8 @@
         <!-- Header Section -->
         <header class="artwork-header">
             <div class="header-content">
-                <h1 class="main-title">Artwork Recognition</h1>
-                <p class="subtitle">Discover the stories behind masterpieces</p>
+                <h1 class="main-title">Architecture Recognition</h1>
+                <p class="subtitle">Discover the stories behind architectural masterpieces</p>
             </div>
         </header>
 
@@ -72,9 +72,9 @@
                 <div class="upload-container">
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-content">
-                            <div class="main-icon">🎨</div>
-                            <h3>Add Your Artwork</h3>
-                            <p class="upload-description">Choose how you'd like to add your artwork</p>
+                            <div class="main-icon">🏛️</div>
+                            <h3>Add Your Architecture</h3>
+                            <p class="upload-description">Choose how you'd like to add your architecture image</p>
                             
                             <div class="upload-options">
                                 <button class="option-btn upload-option" onclick="document.getElementById('fileInput').click()">
@@ -97,7 +97,7 @@
 
                 <div class="upload-controls">
                     <button class="upload-submit-btn" id="uploadBtn" disabled>
-                        Analyze Artwork
+                        Analyze Architecture
                     </button>
                     <button class="clear-btn" id="clearBtn" disabled>
                         Clear
@@ -114,28 +114,28 @@
                 <div class="upload-status" id="uploadStatus"></div>
             </div>
 
-            <!-- Artwork Results Section -->
-            <div class="artwork-results" id="artworkResults" style="display: none;">
+            <!-- Architecture Results Section -->
+            <div class="artwork-results" id="architectureResults" style="display: none;">
                 <div class="results-header">
                     <h2>Recognition Results</h2>
                 </div>
                 
                 <!-- Uploaded Image Display -->
-                <div class="artwork-image-section" id="artworkImageSection">
-                    <img id="uploadedImage" class="uploaded-image" alt="Uploaded artwork">
+                <div class="artwork-image-section" id="architectureImageSection">
+                    <img id="uploadedImage" class="uploaded-image" alt="Uploaded architecture">
                 </div>
                 
-                <!-- Artwork Information -->
+                <!-- Architecture Information -->
                 <div class="artwork-info-section">
                     <div class="artwork-title-section">
-                        <h3 class="section-label">Artwork Title</h3>
-                        <div class="artwork-name" id="artworkName">-</div>
+                        <h3 class="section-label">Building Name</h3>
+                        <div class="artwork-name" id="architectureName">-</div>
                     </div>
                     
                     <div class="artwork-details-grid">
                         <div class="detail-section description-full-width">
                             <h3 class="section-label">Description</h3>
-                            <div class="detail-content" id="artworkDescription">-</div>
+                            <div class="detail-content" id="architectureDescription">-</div>
                         </div>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
                 <!-- Suggestions Section -->
                 <div class="suggestions-section">
                     <div class="suggestions-header">
-                        <h3 class="section-label">Suggestions</h3>
+                        <h3 class="section-label">Similar Architecture</h3>
                     </div>
                     <div class="suggestions-content" id="suggestionsContent">
                         <div class="suggestions-placeholder">
@@ -175,6 +175,7 @@
 
     </div>
 
-    <script src="script.js"></script>
+    <script src="architecture.js"></script>
 </body>
 </html>
+

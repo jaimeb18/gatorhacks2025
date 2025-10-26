@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Recognition Hub - GatorHacks4</title>
+    <title>TravelBuddy AI - AI Recognition Hub</title>
     <style>
         * {
             margin: 0;
@@ -12,368 +12,664 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: #ffffff;
             min-height: 100vh;
-            color: #ffffff;
+            color: #2d4a3e;
+            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        .container {
+        /* Top Navigation Bar */
+        .navbar {
+            background: #ffffff;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #e8ede9;
+            height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #4a6b5f;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #2d5a41;
+        }
+
+        .btn-register {
+            background: #2d8f5d;
+            color: #ffffff;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-register:hover {
+            background: #24704a;
+        }
+
+        /* Hero Section - Split Design */
+        .hero-section {
+            background: #ffffff;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            padding: 80px 40px;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        /* Left Side - Logo/Title */
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 60px;
+        }
+
+        .main-logo {
+            font-size: 6rem;
+            font-weight: 900;
+            line-height: 1;
+            color: #2d5a41;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        .main-logo .highlight {
+            color: #2d8f5d;
+        }
+
+        .subtitle-logo {
+            font-size: 1.25rem;
+            color: #5a8074;
+            font-weight: 500;
+        }
+
+        /* Right Side - Description */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #2d5a41;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-title .highlight {
+            color: #2d8f5d;
+        }
+
+        .hero-date {
+            font-size: 1.125rem;
+            color: #5a8074;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero-description {
+            font-size: 1.0625rem;
+            color: #4a6b5f;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .btn-cta {
+            background: #2d8f5d;
+            color: #ffffff;
+            padding: 14px 40px;
+            border-radius: 6px;
+            font-size: 1.0625rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            align-self: flex-start;
+        }
+
+        .btn-cta:hover {
+            background: #24704a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 143, 93, 0.3);
+        }
+
+        /* Main Content Section - Hidden initially */
+        .main-content-section {
+            display: none;
+            padding: 60px 20px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 60px 0 40px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ff6b9d 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 300;
-            margin-bottom: 20px;
-        }
-
-        .decorative-line {
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, #ffd700, #ff6b9d);
-            margin: 0 auto;
-            border-radius: 2px;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 60px 0;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 48px;
         }
 
         .section-title h2 {
-            font-size: 2.5rem;
-            color: #ffd700;
-            margin-bottom: 15px;
+            font-size: 1.875rem;
+            color: #2d5a41;
+            margin-bottom: 8px;
             font-weight: 600;
+            letter-spacing: -0.3px;
         }
 
         .section-title p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 300;
+            font-size: 1rem;
+            color: #5a8074;
+            font-weight: 400;
         }
 
         /* Cards Grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
             margin-bottom: 60px;
+            max-width: 100%;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 40px 30px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            border: 1px solid #d4e4db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 107, 157, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .card:hover::before {
-            opacity: 1;
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 215, 0, 0.3);
-        }
-
-        .card.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            pointer-events: none;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: #b8d4c6;
         }
 
         .card-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             text-align: center;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
-        }
-
-        .food-card .card-icon {
-            filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.3));
         }
 
         .card h3 {
-            font-size: 1.8rem;
-            color: #ffffff;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #2d5a41;
+            margin-bottom: 12px;
             font-weight: 600;
             text-align: center;
+            letter-spacing: -0.2px;
         }
 
         .card p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9375rem;
+            color: #5a8074;
             line-height: 1.6;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
             text-align: center;
         }
 
         .features {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .feature-tag {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #f0f5f2;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8125rem;
+            color: #4a6b5f;
+            border: 1px solid #d4e4db;
         }
 
         .card-button {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            color: #1a1a2e;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            background: #2d8f5d;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9375rem;
             text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            transition: all 0.2s ease;
             display: block;
             text-decoration: none;
             border: none;
             cursor: pointer;
         }
 
-        .card-button.disabled {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-            box-shadow: none;
+        .card-button:hover {
+            background: #24704a;
         }
 
-        .card:hover .card-button:not(.disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(255, 215, 0, 0.5);
+        /* How It Works Section */
+        .how-it-works-section {
+            background: #ffffff;
+            padding: 100px 40px;
         }
 
-        /* Features Section */
-        .features-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 50px 40px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+        .how-it-works-container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .features-section h3 {
-            font-size: 2rem;
-            color: #ffd700;
+        .section-header {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #2d5a41;
             text-align: center;
-            margin-bottom: 40px;
-            font-weight: 600;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-item {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .feature-item-icon {
-            font-size: 3rem;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+            letter-spacing: -2px;
         }
 
-        .feature-item h4 {
-            font-size: 1.3rem;
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #5a8074;
+            text-align: center;
+            margin-bottom: 80px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 60px;
+            position: relative;
+        }
+
+        .step-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2d8f5d 0%, #34a372 100%);
             color: #ffffff;
-            margin-bottom: 10px;
-            font-weight: 600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.875rem;
+            font-weight: 800;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 12px rgba(45, 143, 93, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
-        .feature-item p {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.5;
+        .step-icon {
+            font-size: 4.5rem;
+            margin-bottom: 24px;
+            opacity: 0.9;
         }
+
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2d5a41;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .step-description {
+            font-size: 1.0625rem;
+            color: #4a6b5f;
+            line-height: 1.7;
+        }
+
+        /* Vertical Line Connector */
+        .steps-container::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #2d8f5d, transparent);
+            z-index: 0;
+        }
+
+        /* Responsive Design for How It Works */
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
+        @media (max-width: 1024px) {
+            .hero-container {
+                gap: 60px;
             }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
+
+            .main-logo {
+                font-size: 5rem;
             }
-            
-            .card {
-                padding: 30px 20px;
-            }
-            
-            .card-icon {
+
+            .hero-title {
                 font-size: 3rem;
             }
-            
-            .section-title h2 {
-                font-size: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
             }
-            
-            .features-grid {
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-container {
                 grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .hero-left {
+                padding-left: 0;
+            }
+
+            .main-logo {
+                font-size: 3.5rem;
+            }
+
+            .hero-title {
+                font-size: 2.25rem;
+            }
+
+            .btn-cta {
+                align-self: center;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 28px 24px;
+            }
+
+            .how-it-works-section {
+                padding: 60px 20px;
+            }
+
+            .section-header {
+                font-size: 2.5rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+            }
+
+            .steps-container {
+                flex-direction: column;
+                gap: 60px;
+            }
+
+            .steps-container::after {
+                display: none;
+            }
+
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .step-title {
+                font-size: 1.5rem;
+            }
+
+            .step-description {
+                font-size: 1rem;
             }
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 0 15px;
+            .navbar {
+                padding: 10px 16px;
             }
-            
-            .header {
-                padding: 40px 0 30px;
+
+            .hero-section {
+                padding: 60px 20px;
             }
-            
-            .header h1 {
-                font-size: 2rem;
+
+            .main-logo {
+                font-size: 2.5rem;
             }
-            
-            .main-content {
-                padding: 40px 0;
+
+            .hero-title {
+                font-size: 1.75rem;
             }
-            
-            .card {
-                padding: 25px 15px;
+
+            .hero-description {
+                font-size: 0.9375rem;
             }
-            
-            .features-section {
-                padding: 30px 20px;
+
+            .btn-register, .btn-cta {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <header class="header">
-            <h1>🎨 AI Recognition Hub</h1>
-            <p>Discover the stories behind masterpieces and flavors</p>
-            <div class="decorative-line"></div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="section-title">
-                <h2>Choose Your Experience</h2>
-                <p>Select what you'd like to explore with AI</p>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <div style="cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 0 0 0 20px; margin-top: -15px;" onclick="goToHomepage()">
+                <img src="logo/1.png" alt="TravelBuddy AI" style="height: 120px; width: auto; object-fit: contain;">
+                <span style="font-size: 1.5rem; font-weight: 700; color: #2d5a41;">TravelBuddy AI</span>
             </div>
+        </div>
+    </nav>
+
+    <div id="landingPageContent">
+    <!-- Hero Section - Split Design -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <!-- Left Side - Logo/Title -->
+            <div class="hero-left">
+                <div class="main-logo">
+                    <div class="highlight">TRAVEL</div>
+                    <div>BUDDY</div>
+                        </div>
+                <div class="subtitle-logo">AI Travel Companion</div>
+                <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 8px; height: 8px; background: #2d8f5d; border-radius: 50%;"></div>
+                        <span style="color: #4a6b5f; font-size: 1rem;">AI-Powered Recognition</span>
+                        </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 8px; height: 8px; background: #2d8f5d; border-radius: 50%;"></div>
+                        <span style="color: #4a6b5f; font-size: 1rem;">Instant Analysis</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 8px; height: 8px; background: #2d8f5d; border-radius: 50%;"></div>
+                        <span style="color: #4a6b5f; font-size: 1rem;">Detailed Insights</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Description -->
+            <div class="hero-right">
+                <h1 class="hero-title">
+                    Turn Your Images<br>
+                    Into<span class="highlight"> Smart</span><br>
+                    <span class="highlight">Discoveries</span>
+                </h1>
+                <p class="hero-description">
+                    Upload artwork, food, or architecture images and instantly receive detailed analysis, history, and recommendations powered by advanced AI. Perfect for art enthusiasts, food lovers, and architecture admirers who want to discover the stories behind what they see.
+                </p>
+                <button class="btn-cta" onclick="showMainContent()">
+                    Give It a Try
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section">
+        <div class="how-it-works-container">
+            <h2 class="section-header">How It Works</h2>
+            <p class="section-subtitle">Follow these simple steps to discover the stories behind your images</p>
             
-            <div class="cards-grid">
-                <!-- Art Recognition Card -->
-                <div class="card art-card" onclick="window.location.href='/art'">
-                    <div class="card-icon">🎨</div>
-                    <h3>Art Recognition</h3>
-                    <p>Upload artwork images to discover their stories, artists, and similar masterpieces</p>
-                    <div class="features">
-                        <span class="feature-tag">✨ AI Analysis</span>
-                        <span class="feature-tag">🔍 Similar Artworks</span>
-                        <span class="feature-tag">📚 Art History</span>
-                    </div>
-                    <button class="card-button">Explore Art →</button>
+            <div class="steps-container">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📤</div>
+                    <h3 class="step-title">Upload Your Image</h3>
+                    <p class="step-description">
+                        Simply upload your artwork, food, or architecture image! We support JPG, PNG, and other common formats.
+                    </p>
                 </div>
 
-                <!-- Food Recognition Card -->
-                <div class="card food-card" onclick="window.location.href='/food'">
-                    <div class="card-icon">🍽️</div>
-                    <h3>Food Recognition</h3>
-                    <p>Upload food images to identify dishes, ingredients, and find nearby restaurants</p>
-                    <div class="features">
-                        <span class="feature-tag">🍳 Recipe Detection</span>
-                        <span class="feature-tag">🥘 Ingredient Analysis</span>
-                        <span class="feature-tag">🌍 Cuisine Origins</span>
-                    </div>
-                    <button class="card-button">Explore Food →</button>
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">🧠</div>
+                    <h3 class="step-title">AI Analyzes Content</h3>
+                    <p class="step-description">
+                        Our advanced AI powered by Google Cloud Vision analyzes your image, identifies key features, and extracts detailed information.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">📊</div>
+                    <h3 class="step-title">Get Insights & Recommendations</h3>
+                    <p class="step-description">
+                        Receive detailed analysis, historical context, and personalized recommendations including similar artworks or nearby restaurants!
+                    </p>
                 </div>
             </div>
+        </div>
+    </section>
+    </div>
 
-            <!-- Features Section -->
-            <div class="features-section">
-                <h3>Powered by Advanced AI</h3>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-item-icon">🤖</div>
-                        <h4>Google Cloud Vision</h4>
-                        <p>Advanced image recognition technology</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-item-icon">🧠</div>
-                        <h4>AI Analysis</h4>
-                        <p>Intelligent content analysis and insights</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-item-icon">🔗</div>
-                        <h4>Rich Information</h4>
-                        <p>Detailed descriptions and external links</p>
-                    </div>
+    <!-- Main Content Section (Original Content) -->
+    <main class="main-content-section" id="mainContent">
+        <div class="section-title">
+            <h2>Choose Your Experience</h2>
+            <p>Select what you'd like to explore with AI</p>
+        </div>
+        
+        <div class="cards-grid">
+            <!-- Art Recognition Card -->
+            <div class="card art-card" onclick="window.location.href='/art'">
+                <div class="card-icon">🎨</div>
+                <h3>Art Recognition</h3>
+                <p>Upload artwork images to discover their stories, artists, and similar masterpieces</p>
+                <div class="features">
+                    <span class="feature-tag">AI Analysis</span>
+                    <span class="feature-tag">Similar Artworks</span>
+                    <span class="feature-tag">Art History</span>
                 </div>
+                <button class="card-button">Get Started</button>
+            </div>
+
+            <!-- Food Recognition Card -->
+            <div class="card food-card" onclick="window.location.href='/food'">
+                <div class="card-icon">🍽️</div>
+                <h3>Food Recognition</h3>
+                <p>Upload food images to identify dishes, ingredients, and find nearby restaurants</p>
+                <div class="features">
+                    <span class="feature-tag">AI Analysis</span>
+                    <span class="feature-tag">Cuisine Origins</span>
+                    <span class="feature-tag">Restaurant Suggestions</span>
+                </div>
+                <button class="card-button">Get Started</button>
+            </div>
+
+            <!-- Architecture Recognition Card -->
+            <div class="card art-card" onclick="window.location.href='/architecture'">
+                <div class="card-icon">🏛️</div>
+                <h3>Architecture Recognition</h3>
+                <p>Upload building images to discover their history, architects, and similar structures</p>
+                <div class="features">
+                    <span class="feature-tag">AI Analysis</span>
+                    <span class="feature-tag">Similar Buildings</span>
+                    <span class="feature-tag">Architectural History</span>
+                </div>
+                <button class="card-button">Get Started</button>
             </div>
         </main>
-    </div>
+
+    <script>
+        function showMainContent() {
+            document.getElementById('landingPageContent').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToHomepage() {
+            document.getElementById('landingPageContent').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Handle back button to show landing page again
+        window.addEventListener('popstate', function() {
+            document.getElementById('landing').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+        });
+    </script>
 </body>
 </html>
+
