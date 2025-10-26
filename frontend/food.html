@@ -6,17 +6,60 @@
     <title>Food Recognition - GatorHacks4</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Top Navigation Bar */
+        .navbar {
+            background: #ffffff;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #e8ede9;
+            height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #4a6b5f;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #2d5a41;
+        }
+    </style>
 </head>
 <body>
     <div class="artwork-container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-left">
+                <div style="cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 0 0 0 20px; margin-top: -15px;" onclick="window.location.href='/'">
+                    <img src="logo/1.png" alt="TravelBuddy AI" style="height: 120px; width: auto; object-fit: contain;">
+                    <span style="font-size: 1.5rem; font-weight: 700; color: #2d5a41;">TravelBuddy AI</span>
+                </div>
+            </div>
+        </nav>
+
         <!-- Header Section -->
         <header class="artwork-header">
             <div class="header-content">
-                <div class="header-nav">
-                    <button class="back-btn" onclick="window.location.href='/'">
-                        ← Back to Home
-                    </button>
-                </div>
                 <h1 class="main-title">Food Recognition</h1>
                 <p class="subtitle">Discover the flavors and stories behind cuisines</p>
             </div>

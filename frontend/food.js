@@ -183,27 +183,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             if (data.success && data.suggestions && data.suggestions.length > 0) {
-                suggestionsContent.innerHTML = '';
-                const suggestionsList = document.createElement('div');
-                suggestionsList.className = 'suggestions-grid';
-                
-                data.suggestions.forEach((restaurant, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'suggestion-item';
-                    item.innerHTML = `
+                const suggestionsHtml = data.suggestions.map((restaurant, index) => `
+                    <div class="suggestion-item">
                         <div class="suggestion-number">${index + 1}</div>
                         <div class="suggestion-details">
                             <div class="suggestion-title">${restaurant['Restaurant Name'] || 'Unknown'}</div>
                             <div class="suggestion-artist">${restaurant['Cuisine'] || 'Unknown Cuisine'}</div>
                             <div class="suggestion-year">Average Cost: ${restaurant['Average Costs'] || 'Unknown'}</div>
-                            <div class="suggestion-location">Yelp Rating: ${restaurant['Yelp Stars'] || 'Unknown'}</div>
-                            ${restaurant['Address'] ? `<div><a href="${restaurant['Address']}" target="_blank" class="suggestion-link">View on Maps</a></div>` : ''}
+                            <div class="suggestion-location">⭐ ${restaurant['Yelp Stars'] || 'Unknown'} Rating</div>
+                            ${restaurant['Address'] ? `<a href="${restaurant['Address']}" target="_blank" class="suggestion-link">View on Maps</a>` : ''}
                         </div>
-                    `;
-                    suggestionsList.appendChild(item);
-                });
+                    </div>
+                `).join('');
                 
-                suggestionsContent.appendChild(suggestionsList);
+                suggestionsContent.innerHTML = suggestionsHtml;
             } else {
                 suggestionsContent.innerHTML = '<div class="suggestions-placeholder"><p>No restaurant suggestions available</p></div>';
             }

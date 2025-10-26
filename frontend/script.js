@@ -211,10 +211,7 @@ class FileUploader {
         const resultsContainer = document.getElementById('artworkResults');
         const uploadedImage = document.getElementById('uploadedImage');
         const artworkName = document.getElementById('artworkName');
-        const artistName = document.getElementById('artistName');
         const artworkDescription = document.getElementById('artworkDescription');
-        const artworkSuggestions = document.getElementById('artworkSuggestions');
-        const debugInfo = document.getElementById('debugInfo');
 
         // Find the first file with artwork analysis
         const fileWithAnalysis = files.find(file => file.artwork_analysis);
@@ -223,7 +220,7 @@ class FileUploader {
             const analysis = fileWithAnalysis.artwork_analysis;
             
             // Display the uploaded image
-            if (fileWithAnalysis.original_name) {
+            if (fileWithAnalysis.original_name && uploadedImage) {
                 // Create a temporary URL for the uploaded image
                 const imageUrl = `/uploads/${fileWithAnalysis.saved_name}`;
                 uploadedImage.src = imageUrl;
@@ -231,58 +228,31 @@ class FileUploader {
             }
             
             // Display artwork information
-            artworkName.textContent = analysis.artwork_name || '-';
-            artworkDescription.textContent = 'Loading AI analysis...';
+            if (artworkName) {
+                artworkName.textContent = analysis.artwork_name || '-';
+            }
+            if (artworkDescription) {
+                artworkDescription.textContent = 'Loading AI analysis...';
+            }
             
             // Automatically load AI analysis into description
             this.loadAIAnalysisIntoDescription(analysis.artwork_name);
             
             // Automatically load suggestions
             this.loadSuggestions(analysis.artwork_name);
-            
-            // Create debug information
-            debugInfo.innerHTML = `
-                <h4>🔍 Analysis Details</h4>
-                <div class="debug-section">
-                    <strong>Confidence:</strong> ${Math.round(analysis.confidence * 100)}%
-                </div>
-                ${analysis.art_labels && analysis.art_labels.length > 0 ? `
-                    <div class="debug-section">
-                        <strong>Art Labels:</strong>
-                        <ul>
-                            ${analysis.art_labels.map(label => 
-                                `<li>${label.description} (${Math.round(label.confidence * 100)}%)</li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-                ${analysis.web_entities && analysis.web_entities.length > 0 ? `
-                    <div class="debug-section">
-                        <strong>Web Entities:</strong>
-                        <ul>
-                            ${analysis.web_entities.map(entity => 
-                                `<li>${entity.description} (${Math.round(entity.score * 100)}%)</li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-                ${analysis.error ? `
-                    <div class="debug-section error">
-                        <strong>Error:</strong> ${analysis.error}
-                    </div>
-                ` : ''}
-            `;
 
             // Show results container
-            resultsContainer.style.display = 'block';
-            
-            // Scroll to results
-            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
-            // Auto-hide after 60 seconds
-            setTimeout(() => {
-                resultsContainer.style.display = 'none';
-            }, 60000);
+            if (resultsContainer) {
+                resultsContainer.style.display = 'block';
+                
+                // Scroll to results
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Auto-hide after 60 seconds
+                setTimeout(() => {
+                    resultsContainer.style.display = 'none';
+                }, 60000);
+            }
         }
     }
 
@@ -357,28 +327,21 @@ class FileUploader {
             const data = await response.json();
             
             if (data.success && data.suggestions && data.suggestions.length > 0) {
-                // Display the suggestions result
+                // Display the suggestions result as cards
                 const suggestionsHtml = data.suggestions.map((suggestion, index) => `
                     <div class="suggestion-item">
                         <div class="suggestion-number">${index + 1}</div>
                         <div class="suggestion-details">
-                            <h4 class="suggestion-title">${suggestion.Name}</h4>
-                            <p class="suggestion-artist">by ${suggestion.Artist}</p>
-                            <p class="suggestion-year">${suggestion.Year}</p>
-                            <p class="suggestion-location">📍 ${suggestion['Current Location']}</p>
+                            <div class="suggestion-title">${suggestion.Name}</div>
+                            <div class="suggestion-artist">by ${suggestion.Artist}</div>
+                            <div class="suggestion-year">${suggestion.Year}</div>
+                            <div class="suggestion-location">📍 ${suggestion['Current Location']}</div>
                             ${suggestion.Wikipedia ? `<a href="${suggestion.Wikipedia}" target="_blank" class="suggestion-link">🔗 Learn More</a>` : ''}
                         </div>
                     </div>
                 `).join('');
                 
-                suggestionsContent.innerHTML = `
-                    <div class="suggestions-result">
-                        <h4>🎨 6 Similar Artworks</h4>
-                        <div class="suggestions-grid">
-                            ${suggestionsHtml}
-                        </div>
-                    </div>
-                `;
+                suggestionsContent.innerHTML = suggestionsHtml;
             } else {
                 // Show error or no results
                 suggestionsContent.innerHTML = `
@@ -405,6 +368,8 @@ class FileUploader {
 
     async loadAIAnalysisIntoDescription(artworkName) {
         const artworkDescription = document.getElementById('artworkDescription');
+        
+        if (!artworkDescription) return;
         
         if (!artworkName || artworkName === 'Artwork could not be found') {
             artworkDescription.textContent = 'Unable to analyze this artwork';
@@ -441,6 +406,8 @@ class FileUploader {
     async loadSuggestions(artworkName) {
         const suggestionsContent = document.getElementById('suggestionsContent');
         
+        if (!suggestionsContent) return;
+        
         if (!artworkName || artworkName === 'Artwork could not be found') {
             suggestionsContent.innerHTML = `
                 <div class="suggestions-error">
@@ -465,28 +432,21 @@ class FileUploader {
             const data = await response.json();
             
             if (data.success && data.suggestions && data.suggestions.length > 0) {
-                // Display the suggestions result
+                // Display the suggestions result as cards
                 const suggestionsHtml = data.suggestions.map((suggestion, index) => `
                     <div class="suggestion-item">
                         <div class="suggestion-number">${index + 1}</div>
                         <div class="suggestion-details">
-                            <h4 class="suggestion-title">${suggestion.Name}</h4>
-                            <p class="suggestion-artist">by ${suggestion.Artist}</p>
-                            <p class="suggestion-year">${suggestion.Year}</p>
-                            <p class="suggestion-location">📍 ${suggestion['Current Location']}</p>
+                            <div class="suggestion-title">${suggestion.Name}</div>
+                            <div class="suggestion-artist">by ${suggestion.Artist}</div>
+                            <div class="suggestion-year">${suggestion.Year}</div>
+                            <div class="suggestion-location">📍 ${suggestion['Current Location']}</div>
                             ${suggestion.Wikipedia ? `<a href="${suggestion.Wikipedia}" target="_blank" class="suggestion-link">🔗 Learn More</a>` : ''}
                         </div>
                     </div>
                 `).join('');
                 
-                suggestionsContent.innerHTML = `
-                    <div class="suggestions-result">
-                        <h4>🎨 6 Similar Artworks</h4>
-                        <div class="suggestions-grid">
-                            ${suggestionsHtml}
-                        </div>
-                    </div>
-                `;
+                suggestionsContent.innerHTML = suggestionsHtml;
             } else {
                 // Show error or no results
                 suggestionsContent.innerHTML = `
