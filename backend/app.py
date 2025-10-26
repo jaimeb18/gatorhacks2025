@@ -59,8 +59,13 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def analyze_image_with_vision(image_path):
-    """Analyze image using Google Vision API to detect artwork"""
+def analyze_image_with_vision(image_path, analysis_type="artwork"):
+    """Analyze image using Google Vision API to detect artwork or architecture
+    
+    Args:
+        image_path: Path to the image file
+        analysis_type: Type of analysis - "artwork" or "architecture"
+    """
     try:
         print(f"Starting analysis for: {image_path}")
         
@@ -213,9 +218,13 @@ def analyze_image_with_vision(image_path):
         
         # If no specific artwork title found, tell user we couldn't identify it
         if not artwork_name:
-            artwork_name = "Unable to identify artwork"
+            if analysis_type == "architecture":
+                artwork_name = "Unable to identify building"
+                print("No specific building found - showing 'Unable to identify building'")
+            else:
+                artwork_name = "Unable to identify artwork"
+                print("No specific artwork title found - showing 'Unable to identify artwork'")
             confidence = 0
-            print("No specific artwork title found - showing 'Unable to identify artwork'")
         
         # Extract artist name from artwork name (common patterns)
         if artwork_name and not artist_name:
@@ -586,8 +595,11 @@ def get_artwork_suggestions(artwork_name):
         artwork_agent = Agent("artwork", artwork_name)
         artwork_agent.add_artwork_to_prompt()
         
-        # Get suggestions from the agent
-        suggestions = artwork_agent.artwork_suggestions()
+        # Get themes first, as required by artwork_suggestions
+        themes = artwork_agent.get_themes()
+        
+        # Get suggestions from the agent, passing themes
+        suggestions = artwork_agent.artwork_suggestions(themes)
         
         return jsonify({
             'artwork_name': artwork_name,
@@ -727,8 +739,11 @@ def get_food_suggestions(food_name):
         food_agent = Agent("food", food_name)
         food_agent.add_food_to_prompt(location)
         
-        # Get suggestions from the agent
-        suggestions = food_agent.food_suggestions(location)
+        # Get themes first, as required by food_suggestions
+        themes = food_agent.get_themes()
+        
+        # Get suggestions from the agent, passing location and themes
+        suggestions = food_agent.food_suggestions(location, themes)
         
         return jsonify({
             'food_name': food_name,
@@ -786,7 +801,7 @@ def upload_architecture():
                     print(f"✅ Image file detected! Analyzing for architecture: {original_filename}")
                     print(f"File path: {file_path}")
                     try:
-                        analysis_result = analyze_image_with_vision(file_path)
+                        analysis_result = analyze_image_with_vision(file_path, analysis_type="architecture")
                         print(f"Analysis result: {analysis_result}")
                         # Store as architecture_analysis for consistency with frontend
                         file_info['architecture_analysis'] = analysis_result
@@ -867,8 +882,11 @@ def get_architecture_suggestions(building_name):
         architecture_agent = Agent("architecture", building_name)
         architecture_agent.add_architecture_to_prompt()
         
-        # Get suggestions from the agent
-        suggestions = architecture_agent.architecture_suggestions()
+        # Get themes first, as required by architecture_suggestions
+        themes = architecture_agent.get_themes()
+        
+        # Get suggestions from the agent, passing themes
+        suggestions = architecture_agent.architecture_suggestions(themes)
         
         return jsonify({
             'building_name': building_name,

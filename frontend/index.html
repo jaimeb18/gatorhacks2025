@@ -26,7 +26,7 @@
             padding: 0;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             border-bottom: 1px solid #e8ede9;
             height: 100px;
             overflow: hidden;
@@ -37,6 +37,10 @@
             display: flex;
             align-items: flex-start;
             gap: 0;
+        }
+
+        .navbar-right {
+            padding-right: 40px;
         }
 
         .nav-links {
@@ -55,6 +59,142 @@
 
         .nav-link:hover {
             color: #2d5a41;
+        }
+
+        .team-btn {
+            background: #2d8f5d;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .team-btn:hover {
+            background: #24704a;
+            transform: translateY(-1px);
+        }
+
+        /* Team Modal */
+        .team-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .team-modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .team-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .team-modal-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d5a41;
+            letter-spacing: -0.5px;
+        }
+
+        .close-team-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #495057;
+            transition: all 0.2s ease;
+        }
+
+        .close-team-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding: 40px 32px;
+        }
+
+        .team-member-card {
+            background: #ffffff;
+            border: 2px solid #d4e4db;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .team-member-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: #b8d4c6;
+        }
+
+        .team-member-avatar {
+            display: none;
+        }
+
+        .team-member-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2d5a41;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .team-member-role {
+            font-size: 1rem;
+            color: #5a8074;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 32px 24px;
+            }
+
+            .navbar-right {
+                padding-right: 20px;
+            }
+
+            .team-btn {
+                padding: 8px 16px;
+                font-size: 0.875rem;
+            }
         }
 
         .btn-register {
@@ -516,7 +656,37 @@
                 <span style="font-size: 1.5rem; font-weight: 700; color: #2d5a41;">TravelBuddy AI</span>
             </div>
         </div>
+        <div class="navbar-right">
+            <button class="team-btn" onclick="showTeamModal()">Team</button>
+        </div>
     </nav>
+
+    <!-- Team Modal -->
+    <div class="team-modal" id="teamModal" onclick="handleTeamModalClick(event)">
+        <div class="team-modal-content" onclick="event.stopPropagation()">
+            <div class="team-modal-header">
+                <h2>Our Team</h2>
+                <button class="close-team-btn" onclick="closeTeamModal()">&times;</button>
+            </div>
+            <div class="team-grid">
+                <div class="team-member-card">
+                    <img src="logo/1.png" alt="Logo" style="width: 160px; height: auto; margin: 0 auto 20px; display: block;">
+                    <div class="team-member-name">Jaime Breitkreutz</div>
+                    <div class="team-member-role">Data Science Major</div>
+                </div>
+                <div class="team-member-card">
+                    <img src="logo/1.png" alt="Logo" style="width: 160px; height: auto; margin: 0 auto 20px; display: block;">
+                    <div class="team-member-name">Yimo Liu</div>
+                    <div class="team-member-role">Data Science + Economics Major</div>
+                </div>
+                <div class="team-member-card">
+                    <img src="logo/1.png" alt="Logo" style="width: 160px; height: auto; margin: 0 auto 20px; display: block;">
+                    <div class="team-member-name">Max Hyken</div>
+                    <div class="team-member-role">Computer Engineering Major</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="landingPageContent">
     <!-- Hero Section - Split Design -->
@@ -668,6 +838,28 @@
         window.addEventListener('popstate', function() {
             document.getElementById('landing').style.display = 'flex';
             document.getElementById('mainContent').style.display = 'none';
+        });
+
+        // Team modal functions
+        function showTeamModal() {
+            document.getElementById('teamModal').style.display = 'flex';
+        }
+
+        function closeTeamModal() {
+            document.getElementById('teamModal').style.display = 'none';
+        }
+
+        function handleTeamModalClick(event) {
+            if (event.target.id === 'teamModal') {
+                closeTeamModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeTeamModal();
+            }
         });
     </script>
 </body>
