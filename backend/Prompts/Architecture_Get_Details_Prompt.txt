@@ -1,7 +1,11 @@
-﻿The name of the dish is:
+﻿The name of the building is:
 
 
-Return a description of [DISH]. The first sentence should be about the origin of the dish, and should also be medium-to-short in length. The second and third should be about the way the dish is made; these two can be medium-to-long sentences.
+Return a description of [BUILDING] using the following format: This was designed by [ARCHITECT(s)] in [COUNTRY], completed in [YEAR]. It is currently located in [LOCATION]. Add an extra sentence discussing the architectural style, notable features, historical context, or cultural significance, depending on what you believe to be most relevant. Also, provide the Wikipedia link for [BUILDING]. Do not use asterisks or anything special around the words.
 
 
-Replace [DISH] with the name of the dish
+Every time [BUILDING] exists, replace it with the name of the building. 
+Every time [ARCHITECT(s)] exists, replace it with the name(s) of the architect(s).
+Every time [COUNTRY] exists, replace it with the country of the building.
+Every time [YEAR] exists, replace it with the completion year.
+Every time [LOCATION] exists, replace it with the building's current location. Prefer using the city name.

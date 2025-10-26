@@ -97,6 +97,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            padding-left: 60px;
         }
 
         .main-logo {
@@ -202,9 +203,10 @@
         /* Cards Grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 60px;
+            max-width: 100%;
         }
 
         .card {
@@ -343,6 +345,8 @@
             font-weight: 800;
             margin-bottom: 32px;
             box-shadow: 0 4px 12px rgba(45, 143, 93, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .step-icon {
@@ -369,9 +373,9 @@
         .steps-container::after {
             content: '';
             position: absolute;
-            top: 30px;
-            left: 0;
-            right: 0;
+            top: 28px;
+            left: 10%;
+            right: 10%;
             height: 2px;
             background: linear-gradient(to right, transparent, #2d8f5d, transparent);
             z-index: 0;
@@ -409,6 +413,10 @@
                 text-align: center;
             }
 
+            .hero-left {
+                padding-left: 0;
+            }
+
             .main-logo {
                 font-size: 3.5rem;
             }
@@ -422,8 +430,9 @@
             }
 
             .cards-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
+                max-width: 100%;
             }
 
             .card {
@@ -491,6 +500,10 @@
                 padding: 12px 24px;
                 font-size: 1rem;
             }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -535,9 +548,9 @@
             <!-- Right Side - Description -->
             <div class="hero-right">
                 <h1 class="hero-title">
-                    Transform Your Images<br>
-                    Into<span class="highlight"> Intelligent</span><br>
-                    <span class="highlight">Insights</span>
+                    Turn Your Images<br>
+                    Into<span class="highlight"> Smart</span><br>
+                    <span class="highlight">Discoveries</span>
                 </h1>
                 <p class="hero-description">
                     Upload artwork, food, or architecture images and instantly receive detailed analysis, history, and recommendations powered by advanced AI. Perfect for art enthusiasts, food lovers, and architecture admirers who want to discover the stories behind what they see.
@@ -617,12 +630,24 @@
                 <h3>Food Recognition</h3>
                 <p>Upload food images to identify dishes, ingredients, and find nearby restaurants</p>
                 <div class="features">
-                    <span class="feature-tag">Recipe Detection</span>
-                    <span class="feature-tag">Ingredient Analysis</span>
+                    <span class="feature-tag">AI Analysis</span>
                     <span class="feature-tag">Cuisine Origins</span>
-                    </div>
-                <button class="card-button">Get Started</button>
+                    <span class="feature-tag">Restaurant Suggestions</span>
                 </div>
+                <button class="card-button">Get Started</button>
+            </div>
+
+            <!-- Architecture Recognition Card -->
+            <div class="card art-card" onclick="window.location.href='/architecture'">
+                <div class="card-icon">🏛️</div>
+                <h3>Architecture Recognition</h3>
+                <p>Upload building images to discover their history, architects, and similar structures</p>
+                <div class="features">
+                    <span class="feature-tag">AI Analysis</span>
+                    <span class="feature-tag">Similar Buildings</span>
+                    <span class="feature-tag">Architectural History</span>
+                </div>
+                <button class="card-button">Get Started</button>
             </div>
         </main>
 

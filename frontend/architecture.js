@@ -1,4 +1,4 @@
-// Food recognition JavaScript
+// Architecture recognition JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
     const uploadStatus = document.getElementById('uploadStatus');
-    const foodResults = document.getElementById('foodResults');
+    const architectureResults = document.getElementById('architectureResults');
     
     let selectedFiles = [];
     
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedFiles = [];
         fileInput.value = '';
         fileList.innerHTML = '';
-        foodResults.style.display = 'none';
+        architectureResults.style.display = 'none';
         updateButtons();
     }
     
@@ -94,13 +94,13 @@ document.addEventListener('DOMContentLoaded', function() {
             progressFill.style.width = '30%';
             progressText.textContent = 'Uploading image...';
             
-            const response = await fetch('/upload_food', {
+            const response = await fetch('/upload_architecture', {
                 method: 'POST',
                 body: formData
             });
             
             progressFill.style.width = '60%';
-            progressText.textContent = 'Analyzing food...';
+            progressText.textContent = 'Analyzing architecture...';
             
             const data = await response.json();
             
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok && data.uploadedFiles && data.uploadedFiles.length > 0) {
                 const uploadedFile = data.uploadedFiles[0];
-                if (uploadedFile.food_analysis) {
+                if (uploadedFile.architecture_analysis) {
                     displayResults(uploadedFile);
                 }
                 uploadStatus.className = 'upload-status success';
@@ -131,91 +131,99 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     async function displayResults(fileInfo) {
-        const analysis = fileInfo.food_analysis;
+        const analysis = fileInfo.architecture_analysis;
         const imageUrl = `/uploads/${fileInfo.saved_name}`;
         
         // Show the uploaded image
-        const foodImage = document.getElementById('uploadedFoodImage');
-        if (foodImage) {
-            foodImage.src = imageUrl;
+        const architectureImage = document.getElementById('uploadedImage');
+        if (architectureImage) {
+            architectureImage.src = imageUrl;
         }
         
-        // Display food name
-        const foodName = document.getElementById('foodName');
-        if (foodName) {
-            foodName.textContent = analysis.food_name || 'Unknown Food';
+        // Display architecture name
+        const architectureName = document.getElementById('architectureName');
+        if (architectureName) {
+            architectureName.textContent = analysis.artwork_name || 'Unknown Building';
         }
         
         // Display description - temporarily show loading
-        const foodDescription = document.getElementById('foodDescription');
-        if (foodDescription) {
-            foodDescription.innerHTML = 'Loading description...';
+        const architectureDescription = document.getElementById('architectureDescription');
+        if (architectureDescription) {
+            architectureDescription.innerHTML = 'Loading description...';
         }
         
         // Show results
-        foodResults.style.display = 'block';
-        foodResults.scrollIntoView({ behavior: 'smooth' });
+        architectureResults.style.display = 'block';
+        architectureResults.scrollIntoView({ behavior: 'smooth' });
         
         // Load detailed description from LLM
-        await loadFoodDetails(analysis.food_name);
+        await loadArchitectureDetails(analysis.artwork_name);
         
-        // Load restaurant suggestions with user's location
-        const locationInput = document.getElementById('locationInput');
-        const location = locationInput ? locationInput.value : 'New York';
-        loadRestaurantSuggestions(analysis.food_name, location);
+        // Load architecture suggestions
+        loadArchitectureSuggestions(analysis.artwork_name);
     }
     
-    async function loadFoodDetails(foodName) {
+    async function loadArchitectureDetails(buildingName) {
         try {
-            const foodDescription = document.getElementById('foodDescription');
-            if (!foodDescription) return;
+            const architectureDescription = document.getElementById('architectureDescription');
+            if (!architectureDescription) return;
             
-            const response = await fetch(`/get_food_details/${encodeURIComponent(foodName)}`);
+            const response = await fetch(`/get_architecture_details/${encodeURIComponent(buildingName)}`);
             const data = await response.json();
             
             if (data.success && data.details) {
-                // Display the LLM-generated description with proper line breaks
-                const formattedText = data.details.split('\n').join('<br>');
-                foodDescription.innerHTML = formattedText;
+                // Display the LLM-generated description with proper line breaks and clickable URLs
+                let formattedText = data.details.split('\n').join('<br>');
+                
+                // Convert URLs to clickable links
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                formattedText = formattedText.replace(urlRegex, (url) => {
+                    return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">${url}</a>`;
+                });
+                
+                architectureDescription.innerHTML = formattedText;
             } else {
-                foodDescription.textContent = data.details || 'Unable to load description.';
+                architectureDescription.textContent = data.details || 'Unable to load description.';
             }
         } catch (error) {
-            console.error('Error loading food details:', error);
-            const foodDescription = document.getElementById('foodDescription');
-            if (foodDescription) {
-                foodDescription.textContent = 'Error loading description.';
+            console.error('Error loading architecture details:', error);
+            const architectureDescription = document.getElementById('architectureDescription');
+            if (architectureDescription) {
+                architectureDescription.textContent = 'Error loading description.';
             }
         }
     }
     
-    async function loadRestaurantSuggestions(foodName, location = 'New York') {
+    async function loadArchitectureSuggestions(buildingName) {
         try {
             const suggestionsContent = document.getElementById('suggestionsContent');
             if (!suggestionsContent) return;
             
-            suggestionsContent.innerHTML = '<div class="suggestions-placeholder"><p>Loading restaurant suggestions...</p></div>';
+            suggestionsContent.innerHTML = '<div class="suggestions-placeholder"><p>Loading similar architecture...</p></div>';
             
-            const response = await fetch(`/get_food_suggestions/${encodeURIComponent(foodName)}?location=${encodeURIComponent(location)}`);
+            const response = await fetch(`/get_architecture_suggestions/${encodeURIComponent(buildingName)}`);
             const data = await response.json();
             
             if (data.success && data.suggestions && data.suggestions.length > 0) {
-                const suggestionsHtml = data.suggestions.map((restaurant, index) => `
+                const suggestionsHtml = data.suggestions.map((building, index) => `
                     <div class="suggestion-item">
                         <div class="suggestion-number">${index + 1}</div>
                         <div class="suggestion-details">
-                            <div class="suggestion-title">${restaurant['Restaurant Name'] || 'Unknown'}</div>
-                            <div class="suggestion-artist">${restaurant['Cuisine'] || 'Unknown Cuisine'}</div>
-                            <div class="suggestion-year">Average Cost: ${restaurant['Average Costs'] || 'Unknown'}</div>
-                            <div class="suggestion-location">⭐ ${restaurant['Yelp Stars'] || 'Unknown'} Rating</div>
-                            ${restaurant['Address'] ? `<a href="${restaurant['Address']}" target="_blank" class="suggestion-link">View on Maps</a>` : ''}
+                            <div class="suggestion-title">${building.Name || 'Unknown'}</div>
+                            <div class="suggestion-artist">${building['Type Of Architecture'] || 'Unknown'}</div>
+                            <div class="suggestion-year">${building.Era || 'Unknown'} Era</div>
+                            <div class="suggestion-location">📍 ${building.Location || 'Unknown Location'}</div>
+                            <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                                ${building['Wikipedia'] ? `<a href="${building['Wikipedia']}" target="_blank" class="suggestion-link" style="margin-right: 8px;">🔗 Learn More</a>` : ''}
+                                ${building['Address'] ? `<a href="${building['Address']}" target="_blank" class="suggestion-link">📍 View on Maps</a>` : ''}
+                            </div>
                         </div>
                     </div>
                 `).join('');
                 
                 suggestionsContent.innerHTML = suggestionsHtml;
             } else {
-                suggestionsContent.innerHTML = '<div class="suggestions-placeholder"><p>No restaurant suggestions available</p></div>';
+                suggestionsContent.innerHTML = '<div class="suggestions-placeholder"><p>No architecture suggestions available</p></div>';
             }
         } catch (error) {
             console.error('Error loading suggestions:', error);
@@ -248,3 +256,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
