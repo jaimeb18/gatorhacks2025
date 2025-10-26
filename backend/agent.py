@@ -169,7 +169,3 @@ class Agent:
                 suggestion_list.append(append_this)
         return suggestion_list
 
-my_agent = Agent("artwork", "St. Denis by Eduoard Cortes")
-my_agent.add_artwork_to_prompt()
-params = my_agent.get_themes()
-print(my_agent.artwork_suggestions(params))

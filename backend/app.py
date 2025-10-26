@@ -526,34 +526,6 @@ def upload_files():
     except Exception as e:
         return jsonify({'error': f'Upload failed: {str(e)}'}), 500
 
-@app.route('/files')
-def list_files():
-    """List all uploaded files"""
-    try:
-        files = []
-        for filename in os.listdir(app.config['UPLOAD_FOLDER']):
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            if os.path.isfile(file_path):
-                file_info = {
-                    'filename': filename,
-                    'size': os.path.getsize(file_path),
-                    'upload_time': datetime.fromtimestamp(os.path.getmtime(file_path)).isoformat()
-                }
-                files.append(file_info)
-        
-        return jsonify({'files': files})
-        
-    except Exception as e:
-        return jsonify({'error': f'Failed to list files: {str(e)}'}), 500
-
-@app.route('/download/<filename>')
-def download_file(filename):
-    """Download a specific file"""
-    try:
-        return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
-    except FileNotFoundError:
-        return jsonify({'error': 'File not found'}), 404
-
 @app.route('/uploads/<filename>')
 def serve_uploaded_image(filename):
     """Serve uploaded images"""
