@@ -17,9 +17,8 @@
                         ← Back to Home
                     </button>
                 </div>
-                <h1 class="main-title">🎨 Artwork Recognition</h1>
+                <h1 class="main-title">Artwork Recognition</h1>
                 <p class="subtitle">Discover the stories behind masterpieces</p>
-                <div class="decorative-line"></div>
             </div>
         </header>
 
@@ -36,18 +35,10 @@
                             
                             <div class="upload-options">
                                 <button class="option-btn upload-option" onclick="document.getElementById('fileInput').click()">
-                                    <div class="option-icon">🖼️</div>
+                                    <div class="option-icon">📁</div>
                                     <div class="option-text">
                                         <div class="option-title">Upload File</div>
                                         <div class="option-subtitle">Choose from device</div>
-                                    </div>
-                                </button>
-                                
-                                <button class="option-btn camera-option" id="cameraBtn">
-                                    <div class="option-icon">📷</div>
-                                    <div class="option-text">
-                                        <div class="option-title">Take Photo</div>
-                                        <div class="option-subtitle">Use camera</div>
                                     </div>
                                 </button>
                             </div>
@@ -83,7 +74,7 @@
             <!-- Artwork Results Section -->
             <div class="artwork-results" id="artworkResults" style="display: none;">
                 <div class="results-header">
-                    <h2>🎭 Recognition Results</h2>
+                    <h2>Recognition Results</h2>
                 </div>
                 
                 <!-- Uploaded Image Display -->
@@ -109,18 +100,13 @@
                 <!-- Suggestions Section -->
                 <div class="suggestions-section">
                     <div class="suggestions-header">
-                        <h3 class="section-label">🎨 Suggestions</h3>
+                        <h3 class="section-label">Suggestions</h3>
                     </div>
                     <div class="suggestions-content" id="suggestionsContent">
                         <div class="suggestions-placeholder">
                             <p>Loading suggestions...</p>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Debug Information -->
-                <div class="debug-info" id="debugInfo">
-                    <!-- Debug info will be displayed here -->
                 </div>
             </div>
         </main>
@@ -129,7 +115,7 @@
         <div class="camera-modal" id="cameraModal" style="display: none;">
             <div class="camera-modal-content">
                 <div class="camera-header">
-                    <h3>📷 Camera</h3>
+                    <h3>Camera</h3>
                     <button class="close-camera-btn" id="closeCameraBtn">&times;</button>
                 </div>
                 <div class="camera-preview">
@@ -137,9 +123,9 @@
                     <canvas id="cameraCanvas" style="display: none;"></canvas>
                 </div>
                 <div class="camera-controls">
-                    <button class="capture-btn" id="captureBtn">📸 Capture</button>
-                    <button class="retake-btn" id="retakeBtn" style="display: none;">🔄 Retake</button>
-                    <button class="use-photo-btn" id="usePhotoBtn" style="display: none;">✅ Use Photo</button>
+                    <button class="capture-btn" id="captureBtn">Capture</button>
+                    <button class="retake-btn" id="retakeBtn" style="display: none;">Retake</button>
+                    <button class="use-photo-btn" id="usePhotoBtn" style="display: none;">Use Photo</button>
                 </div>
             </div>
         </div>

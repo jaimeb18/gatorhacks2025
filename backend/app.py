@@ -24,7 +24,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-def cleanup_old_images(max_images=5):
+def cleanup_old_images(max_images=20):
     """Keep only the most recent images, delete the oldest ones"""
     try:
         # Get all image files in upload directory
@@ -400,6 +400,11 @@ def styles():
     """Serve CSS file"""
     return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend'), 'styles.css')
 
+@app.route('/logo/<filename>')
+def serve_logo(filename):
+    """Serve logo files"""
+    return send_from_directory(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'logo'), filename)
+
 @app.route('/script.js')
 def script():
     """Serve JavaScript file"""
@@ -494,8 +499,8 @@ def upload_files():
             response_data['failedFiles'] = failed_uploads
             response_data['message'] += f' ({len(failed_uploads)} files failed)'
         
-        # Clean up old images to maintain max of 5 images
-        cleanup_old_images(max_images=5)
+        # Clean up old images to maintain max of 20 images
+        cleanup_old_images(max_images=20)
         
         return jsonify(response_data)
         
@@ -668,8 +673,8 @@ def upload_food():
             response_data['failedFiles'] = failed_uploads
             response_data['message'] += f' ({len(failed_uploads)} files failed)'
         
-        # Clean up old images to maintain max of 5 images
-        cleanup_old_images(max_images=5)
+        # Clean up old images to maintain max of 20 images
+        cleanup_old_images(max_images=20)
         
         return jsonify(response_data)
         

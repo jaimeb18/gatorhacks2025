@@ -2,14 +2,15 @@ from pathlib import Path
 import google.generativeai as genai
 import re
 import requests
+from config import google_api_key, google_places_api_key, model_name
 
 class Agent:
-    # API Key, remove later
-    google_api_key = "AIzaSyAdCvnxTFuXUCBLK3KX6rtzlyto1qaBA_U"
-    google_places_api_key = "AIzaSyDnRsci0FAeVRAMgyhYpUiT6_LenEfM_QE"
+    # API Keys loaded from config
+    google_api_key = google_api_key
+    google_places_api_key = google_places_api_key
 
     # Gemini Model
-    model_name = "gemini-2.5-flash"
+    model_name = model_name
     def __init__(self, media_type, name: str = ""):
         current_file = Path(__file__)
         current_directory = current_file.parent

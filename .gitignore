@@ -1,5 +1,8 @@
 # Google Cloud credentials
 backend/service-account-key.json
+backend/config.py
+
+# JSON files (except package files)  
 *.json
 !package.json
 !package-lock.json
