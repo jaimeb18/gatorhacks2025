@@ -89,7 +89,10 @@ class Agent:
         response = self.__model.generate_content(self.__get_details_prompt)
         return response.text
 
-    def artwork_suggestions(self):
+    def artwork_suggestions(self, themes):
+        lines = self.__get_suggestions_prompt.splitlines()
+        lines[-1] += themes
+        self.__get_suggestions_prompt = "\n".join(lines)
         response = self.__model.generate_content(self.__get_suggestions_prompt)
         gemini_list = eval(re.sub(r'```python\n?|```\n?', '', response.text.strip()))
         suggestion_list = []
@@ -165,3 +168,4 @@ class Agent:
                     append_this["Address"] = usable_link
                 suggestion_list.append(append_this)
         return suggestion_list
+
