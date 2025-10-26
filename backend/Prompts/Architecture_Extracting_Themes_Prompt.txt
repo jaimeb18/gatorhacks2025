@@ -1,0 +1,19 @@
+﻿You are an expert in architectural history and design analysis.
+Building: 
+In the building in the previous line is not a piece of architecture, return ERROR instead and ignore all further instructions. 
+If information is uncertain or not present, respond with “Unknown.”
+Respond using JSON file
+Respond with ONLY valid JSON. No explanation or text outside the JSON.
+
+
+Extract the following.
+Building Name: the commonly used or official name.
+Architect / Designer: individual(s) or firm responsible for the design.
+Location: country, city, or specific site if known.
+Beginning Date
+Completion Date
+Architectural Style or Movement: e.g., Gothic, Modernist, Brutalist, Renaissance, Postmodern, etc.
+Primary Function: e.g., religious, residential, civic, commercial, cultural, infrastructure, etc.
+Cultural / Symbolic Themes: what the building expresses or represents (e.g., progress, spirituality, minimalism, nationalism).
+Notable Features: any unique design elements, shapes, facades, or innovations.
+Influence / Context: how it fits within architectural movements or its regional significance.
