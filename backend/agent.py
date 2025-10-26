@@ -32,6 +32,14 @@ class Agent:
                 encoding="utf-8")
             self.__get_details_prompt = (prompts / "Food_Get_Details_Prompt.txt").read_text(encoding="utf-8")
             self.__get_suggestions_prompt = (prompts / "Food_Get_Suggestions_Prompt.txt").read_text(encoding="utf-8")
+        elif media_type == "architecture":
+            self.__artwork = name
+
+            # Gathering files
+            self.__extracting_themes_prompt = (prompts / "Architecture_Extracting_Themes_Prompt.txt").read_text(
+                encoding="utf-8")
+            self.__get_details_prompt = (prompts / "Architecture_Get_Details_Prompt.txt").read_text(encoding="utf-8")
+            self.__get_suggestions_prompt = (prompts / "Architecture_Get_Suggestions_Prompt.txt").read_text(encoding="utf-8")
 
         # Configure the API key
         genai.configure(api_key=Agent.google_api_key)
@@ -58,6 +66,18 @@ class Agent:
         lines = self.__get_suggestions_prompt.splitlines()
         lines[1] = lines[1].replace("{food}", self.__dish_name)
         lines[0] += f" {location}"
+        self.__get_suggestions_prompt = "\n".join(lines)
+
+    def add_architecture_to_prompt(self):
+        lines = self.__extracting_themes_prompt.splitlines()
+        lines[1] += f" {self.__artwork}"
+        self.__extracting_themes_prompt = "\n".join(lines)
+        lines = self.__get_details_prompt.splitlines()
+        lines[0] += f" {self.__artwork}"
+        self.__get_details_prompt = "\n".join(lines)
+        lines = self.__get_suggestions_prompt.splitlines()
+        lines[1] = lines[1].replace("{name}", self.__artwork)
+        lines[0] += f" {self.__artwork}"
         self.__get_suggestions_prompt = "\n".join(lines)
 
     def get_themes(self):
@@ -109,5 +129,32 @@ class Agent:
                         append_this["Yelp Stars"] = f"{place_info['rating']} (Google)"
                     else:
                         append_this["Yelp Stars"] = innerList[3]
+                suggestion_list.append(append_this)
+        return suggestion_list
+
+    def architecture_suggestions(self):
+        response = self.__model.generate_content(self.__get_suggestions_prompt)
+        gemini_list = eval(re.sub(r'```python\n?|```\n?', '', response.text.strip()))
+        suggestion_list = []
+        for innerList in gemini_list:
+            if type(innerList) is list:
+                append_this = {"Name": innerList[0], "Location": innerList[1], "Type Of Architecture": innerList[2],
+                 "Era": innerList[3],"Wikipedia": innerList[4]
+                }
+                # Get Google Maps info
+                url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
+                params = {
+                    "input": f"{append_this["Name"]} in {append_this["Location"]}",
+                    "inputtype": "textquery",
+                    "fields": "place_id,name,formatted_address,rating",
+                    "key": Agent.google_places_api_key
+                }
+                response = requests.get(url, params=params).json()
+
+                if response.get("candidates") and len(response["candidates"]) > 0:
+                    place_info = response["candidates"][0]
+                    place_id = place_info["place_id"]
+                    usable_link = f"https://www.google.com/maps/place/?q=place_id:{place_id}"
+                    append_this["Address"] = usable_link
                 suggestion_list.append(append_this)
         return suggestion_list

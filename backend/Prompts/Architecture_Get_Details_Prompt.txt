@@ -1,0 +1,7 @@
+﻿The name of the dish is:
+
+
+Return a description of [DISH]. The first sentence should be about the origin of the dish, and should also be medium-to-short in length. The second and third should be about the way the dish is made; these two can be medium-to-long sentences.
+
+
+Replace [DISH] with the name of the dish
