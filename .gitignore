@@ -2,6 +2,9 @@
 backend/service-account-key.json
 backend/config.py
 
+# Uploaded files
+backend/uploads/
+
 # JSON files (except package files)  
 *.json
 !package.json
