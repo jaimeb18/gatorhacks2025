@@ -11,6 +11,7 @@ class Agent:
 
     # Gemini Model
     model_name = model_name
+
     def __init__(self, media_type, name: str = ""):
         current_file = Path(__file__)
         current_directory = current_file.parent
@@ -77,7 +78,6 @@ class Agent:
         lines[0] += f" {self.__artwork}"
         self.__get_details_prompt = "\n".join(lines)
         lines = self.__get_suggestions_prompt.splitlines()
-        lines[1] = lines[1].replace("{name}", self.__artwork)
         lines[0] += f" {self.__artwork}"
         self.__get_suggestions_prompt = "\n".join(lines)
 
@@ -169,3 +169,7 @@ class Agent:
                 suggestion_list.append(append_this)
         return suggestion_list
 
+my_agent = Agent("artwork", "St. Denis by Eduoard Cortes")
+my_agent.add_artwork_to_prompt()
+params = my_agent.get_themes()
+print(my_agent.artwork_suggestions(params))

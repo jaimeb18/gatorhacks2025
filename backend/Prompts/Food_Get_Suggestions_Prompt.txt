@@ -1,3 +1,11 @@
 ﻿Location:
-Find similar restaurants with cuisine similar to {food} using the following guidelines, give four in the same city and two in the general area, for a total of six. For each restaurant, create a list in the form [“Restaurant”, “Cuisine”, “Average Costs”, “Yelp Stars”], replacing each string with the actual piece of information. Return only the six lists in valid Python list format like [["restaurant1", "cuisine1", "average_costs1", "yelp_stars1"], ["restaurant2", "cuisine2", "average_costs2", "yelp_stars2"], ...]. If one of these metrics is unknown, replace it with the exact string “Unknown”.
-Use the following parameters as a guideline. Each suggestion should be highly related to at least one of the parameters. At least one of the responses should be of a different cuisine. At least one of the responses should be of a different main ingredient. At least one of the responses should be a restaurant with vegan and/or vegetarian options.
+Find similar restaurants with cuisine similar to {food} using the following guidelines.
+Return six responses, four in the same city and two in the area.
+Create a list in the form [“Restaurant”, “Cuisine”, “Average Costs”, “Yelp Stars”, “Link to Address on Google Maps”] for each restaurant, replacing each string with the actual piece of information.
+Return only the six lists in valid Python list format ["restaurant1", "cuisine1", "average_costs1", "yelp_stars1", "address1"], ["restaurant2", "cuisine2", "average_costs2", "yelp_stars2", "address2"], ...].
+If one of these metrics is unknown, replace it with the exact string “Unknown”.
+
+Each suggestion should be highly related to at least one of the parameters.
+At least one of the responses is of a different cuisine.
+At least one of the responses is of a different main ingredient.
+One of the responses is a restaurant with vegan and/or vegetarian options.
