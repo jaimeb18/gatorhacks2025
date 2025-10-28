@@ -1,5 +1,7 @@
 # TravelBuddy AI
 
+[**3rd Place Overall - UF AI Days GatorHack**](https://www.hackathonparty.com/hackathons/26/projects/332)
+
 An intelligent web application that uses AI to recognize and analyze artwork, food, and architecture from uploaded images, providing detailed information, historical context, and personalized recommendations.
 
 ## Project Overview
@@ -58,7 +60,6 @@ gatorhacks4/
 - **Google Cloud Vision API** - Image recognition and analysis
 - **Google Gemini AI (gemini-2.5-flash)** - LLM for descriptions and suggestions
 - **Google Places API** - Restaurant and location data
-- **Werkzeug** - WSGI utilities
 
 ### Frontend
 - **HTML5** - Structure
